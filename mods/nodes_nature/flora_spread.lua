@@ -193,7 +193,7 @@ minetest.register_abm({
 	label = "Grow cane",
 	nodenames = {"group:cane_plant"},
 	neighbors = {"group:sediment"},
-	interval = 150,
+	interval = 330,
 	chance = 2,
 	catch_up = true,
 	action = function(...)
