@@ -30,8 +30,8 @@ end
 minetest.register_abm({
 	label = "Water Freeze",
 	nodenames = {"group:water"},
-	interval = 141,
-	chance = 10,
+	interval = 1410,
+	chance = 1,
 	action = function(...)
 		water_freeze(...)
 	end
@@ -56,8 +56,8 @@ minetest.register_abm({
 	label = "Water Evaporate",
 	nodenames = {"group:water"},
 	neighbors = {"air"},
-	interval = 145,
-	chance = 17,
+	interval = 2465,
+	chance = 1,
 	action = function(...)
 		water_evap(...)
 	end
@@ -102,8 +102,8 @@ end
 minetest.register_abm({
 	label = "Thaw Ice and snow",
 	nodenames = {"nodes_nature:ice", "nodes_nature:snow_block", "nodes_nature:snow", "nodes_nature:sea_ice"},
-	interval = 103,
-	chance = 5,
+	interval = 515,
+	chance = 1,
 	action = function(...)
 		thaw_frozen(...)
 	end
@@ -165,8 +165,8 @@ minetest.register_abm({
 	label = "snow accumulate",
 	nodenames = {"air", "nodes_nature:snow"},
 	neighbors = {"group:crumbly","group:cracky", "group:snappy"},
-	interval = 72,
-	chance = 770,
+	interval = 55440,
+	chance = 1,
 	action = function(...)
 		snow_accumulate(...)
 	end
@@ -308,8 +308,8 @@ minetest.register_abm({
 	label = "Moisture Spread",
 	nodenames = {"group:wet_sediment"},
 	--neighbors = {"group:sediment"},
-	interval = 121,
-	chance = 15,
+	interval = 1815,
+	chance = 1,
 	action = function(...)
 		moisture_spread(...)
 	end

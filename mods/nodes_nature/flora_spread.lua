@@ -73,8 +73,8 @@ end
 minetest.register_abm({
 	label = "Flora spread",
 	nodenames = {"group:flora"},
-	interval = 260,
-	chance = 60,
+	interval = 15600,
+	chance = 1,
 	action = function(...)
 		flora_spread(...)
 	end,
@@ -140,8 +140,8 @@ end
 minetest.register_abm({
 	label = "Mushroom spread",
 	nodenames = {"group:mushroom"},
-	interval = 260,
-	chance = 60,
+	interval = 15600,
+	chance = 1,
 	catch_up = true,
 	action = function(...)
 		mushroom_spread(...)
@@ -193,8 +193,8 @@ minetest.register_abm({
 	label = "Grow cane",
 	nodenames = {"group:cane_plant"},
 	neighbors = {"group:sediment"},
-	interval = 220,
-	chance = 3,
+	interval = 15600,
+	chance = 1,
 	catch_up = true,
 	action = function(...)
 		grow_cane(...)
@@ -211,8 +211,8 @@ minetest.register_abm({
 	label = "Surface spread",
 	nodenames = {"group:spreading"},
 	neighbors = {"air", "group:sediment"},
-	interval = 161,
-	chance = 5,
+	interval = 805,
+	chance = 1,
 	catch_up = false,
 	action = function(pos, node)
 

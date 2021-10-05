@@ -381,8 +381,8 @@ minetest.register_abm({
 	label = "Lava cooling",
 	nodenames = {"nodes_nature:lava_source", "nodes_nature:lava_flowing"},
 	neighbors = {"group:cools_lava"},
-	interval = 10,
-	chance = 3,
+	interval = 30,
+	chance = 1,
 	catch_up = false,
 	action = function(...)
 		cool_lava(...)
@@ -493,8 +493,8 @@ minetest.register_abm({
 	label = "Lava melt",
 	nodenames = {"nodes_nature:lava_source", "nodes_nature:lava_flowing"},
 	neighbors = {"group:stone", "group:soft_stone", 'air', 'climate:air_temp'},
-	interval = 26,
-	chance = 13,
+	interval = 338,
+	chance = 1,
 	catch_up = false,
 	action = function(...)
 		lava_melt(...)
