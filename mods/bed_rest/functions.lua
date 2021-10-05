@@ -165,7 +165,6 @@ end
 local function lay_down(player, level, pos, bed_pos, state, skip)
 	local name = player:get_player_name()
 	local hud_flags = player:hud_get_flags()
-	local po = player:get_physics_override()
 
 	if not player or not name then
 		return
@@ -191,10 +190,7 @@ local function lay_down(player, level, pos, bed_pos, state, skip)
 		player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 		player:set_look_horizontal(math.random(1, 180) / 100)
 		player_api.player_attached[name] = false
-		po.speed = 1
-		po.jump = 1
-		po.sneak = true
-		player:set_physics_override(po)
+		player:set_physics_override(1,1,1)
 		hud_flags.wielditem = true
 		player_api.set_animation(player, "stand")
 
@@ -230,10 +226,7 @@ local function lay_down(player, level, pos, bed_pos, state, skip)
 		player_monoids.jump:del_change(player, "health:physics")
 		player_monoids.speed:del_change(player, "health:physics_HE")
 		player_monoids.jump:del_change(player, "health:physics_HE")
-		po.speed = 0
-		po.jump = 0
-		po.sneak = false
-		player:set_physics_override(po)
+		player:set_physics_override(0,0,0)
 		player:set_pos(p)
 		player_api.player_attached[name] = true
 		hud_flags.wielditem = false
