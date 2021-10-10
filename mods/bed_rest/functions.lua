@@ -190,7 +190,11 @@ local function lay_down(player, level, pos, bed_pos, state, skip)
 		player:set_eye_offset({x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
 		player:set_look_horizontal(math.random(1, 180) / 100)
 		player_api.player_attached[name] = false
-		player:set_physics_override(1,1,1)
+		po.speed = 1
+		po.jump = 1
+		po.sneak = true
+		po.gravity = 1
+		player:set_physics_override(po)
 		hud_flags.wielditem = true
 		player_api.set_animation(player, "stand")
 
@@ -226,7 +230,11 @@ local function lay_down(player, level, pos, bed_pos, state, skip)
 		player_monoids.jump:del_change(player, "health:physics")
 		player_monoids.speed:del_change(player, "health:physics_HE")
 		player_monoids.jump:del_change(player, "health:physics_HE")
-		player:set_physics_override(0,0,0)
+		po.speed = 0
+		po.jump = 0
+		po.sneak = false
+		po.gravity = 0
+		player:set_physics_override(po)
 		player:set_pos(p)
 		player_api.player_attached[name] = true
 		hud_flags.wielditem = false
