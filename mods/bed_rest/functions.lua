@@ -165,6 +165,7 @@ end
 local function lay_down(player, level, pos, bed_pos, state, skip)
 	local name = player:get_player_name()
 	local hud_flags = player:hud_get_flags()
+	local po = player:get_physics_override()
 
 	if not player or not name then
 		return
