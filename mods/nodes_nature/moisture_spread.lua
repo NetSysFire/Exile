@@ -21,22 +21,6 @@ local function water_freeze(pos, node)
 	end
 end
 
-<<<<<<< HEAD
---
-minetest.register_abm({
-	label = "Water Freeze",
-	nodenames = {"group:water"},
-	interval = 1410,
-	chance = 1,
-	action = function(...)
-		water_freeze(...)
-	end
-})
-
-
-=======
->>>>>>> 178ad06... Combine three water source ABMs into one
-----------------------------------------------------------------
 --evaporate water
 local function water_evap(pos, node)
 
