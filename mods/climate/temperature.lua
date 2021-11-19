@@ -458,8 +458,8 @@ end
 minetest.register_node("climate:air_temp", {
 	description = "Temperature Effect Air",
 	tiles = {"climate_air.png"},
-	--drawtype = "airlike",
-	drawtype = "glasslike",
+	drawtype = "airlike",
+	--drawtype = "glasslike",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -473,6 +473,7 @@ minetest.register_node("climate:air_temp", {
 	end,
 	post_effect_color = {a = 5, r = 254, g = 254, b = 254}
 })
+
 
 --Water
 --add here if that ever becomes necessary
