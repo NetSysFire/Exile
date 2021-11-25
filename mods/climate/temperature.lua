@@ -309,10 +309,11 @@ end
 
 
 local function swap_air(old_pos, new_pos, temp_m)
+   local oldname = minetest.get_node(old_pos).name
    if minetest.get_node(new_pos).name == "air" then
       local timer = 8
       minetest.set_node(old_pos, {name = 'air'})
-      minetest.set_node(new_pos, {name = 'climate:air_temp'})
+      minetest.set_node(new_pos, {name = oldname})
       local meta = minetest.get_meta(new_pos)
       meta:set_float("temp", temp_m)
       minetest.get_node_timer(new_pos):start(math.random(timer, timer*2))
@@ -423,7 +424,8 @@ function climate.heat_transfer(pos, nodename, replace)
 	local pos_max = {x=pos.x +1, y=pos.y +1, z=pos.z +1}
 	local pos_min = {x=pos.x -1, y=pos.y -1, z=pos.z -1}
 	local air, cn = minetest.find_nodes_in_area(pos_min, pos_max,
-				{'air', 'group:water', 'climate:air_temp'})
+			    {'air', 'group:water', 'climate:air_temp',
+			     "climate:air_temp_visible"	})
 	--including group:temp_pass causes problems for doing pottery etc in groups (cools down bc of neighbors).
 	--taking them out of temp_pass would allow exploits (e.g. furnaces built from pots)
 	-- it seems good to let air_temp self cool. Any other temp_pass nodes that ought to be here
@@ -439,8 +441,7 @@ function climate.heat_transfer(pos, nodename, replace)
 	temp_m = temp_m *(1 - dis_rate)
 	meta:set_float("temp", temp_m)
 
-
-	if nodename == "climate:air_temp" then
+	if string.sub(nodename,9,16) == "air_temp" then
 		local moved = move_air_nodes(pos, meta, temp_m)
 		--no longer here, stop timer
 		if moved then
@@ -458,11 +459,10 @@ end
 
 --Air
 --these will move
-minetest.register_node("climate:air_temp", {
+local air_def = {
 	description = "Temperature Effect Air",
 	tiles = {"climate_air.png"},
 	drawtype = "airlike",
-	--drawtype = "glasslike",
 	paramtype = "light",
 	sunlight_propagates = true,
 	walkable = false,
@@ -474,8 +474,15 @@ minetest.register_node("climate:air_temp", {
 	on_timer =function(pos, elapsed)
 		return climate.heat_transfer(pos, "climate:air_temp", 'air')
 	end,
-	post_effect_color = {a = 5, r = 254, g = 254, b = 254}
-})
+	post_effect_color = {a = 5, r = 254, g = 254, b = 254},
+}
+minetest.register_node("climate:air_temp", air_def)
+air_def.description = "Temperature Effect Air (Visible)"
+air_def.drawtype = "glasslike"
+air_def.on_timer =function(pos, elapsed)
+   return climate.heat_transfer(pos, "climate:air_temp_visible", 'air')
+end,
+minetest.register_node("climate:air_temp_visible", air_def)
 
 
 --Water
@@ -486,6 +493,11 @@ minetest.register_node("climate:air_temp", {
 --node timers call this to  heat/cool `heatable` group.
 --if only air around it will create air_temp nodes
 function climate.air_temp_source(pos, temp_effect, temp_max, chance, timer)
+	local at_node = 'climate:air_temp'
+	local meta = minetest.get_meta(pos)
+	if meta:get_string("hot_air") ~= "" then
+	   at_node = "climate:air_temp_visible"
+	end
 	--get all surrounding air positions, and heatables
 	local pos_max = {x=pos.x +1, y=pos.y +1, z=pos.z +1}
 	local pos_min = {x=pos.x -1, y=pos.y -1, z=pos.z -1}
@@ -501,7 +513,7 @@ function climate.air_temp_source(pos, temp_effect, temp_max, chance, timer)
 			--create air_temp
 			if name == 'air' then
 				--if it is air then create air_temp
-				minetest.set_node(node, {name = 'climate:air_temp'})
+				minetest.set_node(node, {name = at_node })
 				--save temp_effect in meta. This can accumulate over time
 				--and will be added to temp adjust calculations
 				local meta = minetest.get_meta(node)
