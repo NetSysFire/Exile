@@ -146,7 +146,7 @@ minetest.register_on_leaveplayer(function(player)
 		store:set_float("temp", t)
 	end
 end)
-]]
+]]--
 
 minetest.register_on_joinplayer(function(player)
 	--get weather from storage, override random start values
@@ -167,7 +167,6 @@ minetest.register_on_joinplayer(function(player)
       else
 	 minetest.log("warning", "No previous weather could be loaded")
       end
-s
 
 		--same again, but for temperature
 		local temp = store:get_float("temp")
