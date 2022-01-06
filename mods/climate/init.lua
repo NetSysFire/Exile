@@ -155,13 +155,19 @@ minetest.register_on_joinplayer(function(player)
 
 		local w_name = store:get_string("weather")
 
-		if w_name ~= "" then
-			--check valid
-			local weather = get_weather_table(w_name, registered_weathers)
-			if weather then
-				climate.active_weather = weather
-			end
-		end
+      if w_name ~= "" then
+	 --check valid
+	 local weather = get_weather_table(w_name, registered_weathers)
+	 if weather then
+	    climate.active_weather = weather
+	    minetest.log("action", "Loaded a valid weather: "..w_name)
+	 else
+	    minetest.log("error", "Invalid weather loaded: "..w_name)
+	 end
+      else
+	 minetest.log("warning", "No previous weather could be loaded")
+      end
+s
 
 		--same again, but for temperature
 		local temp = store:get_float("temp")
