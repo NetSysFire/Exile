@@ -22,7 +22,7 @@ lightPoint.light_source = 12
 minetest.register_node("illumination:light_mid", lightPoint)
 lightPoint.light_source = 14
 minetest.register_node("illumination:light_full", lightPoint)
-
+--[[
 minetest.register_lbm({ --This should clean up nodes that don't get deleted for some reason
       nodenames={"illumination:light_faint","illumination:light_dim","illumination:light_mid","illumination:light_full"},
       label="Remove invalid illumination points",
@@ -44,7 +44,7 @@ minetest.register_lbm({ --This should clean up nodes that don't get deleted for 
 			minetest.remove_node(pos)
 		end
 	end
-})
+   })]]--
 minetest.register_on_joinplayer(function(player)
 	illumination.playerLights[player:get_player_name()] = {
 		bright = 0,
