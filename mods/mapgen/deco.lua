@@ -1,105 +1,71 @@
-local impethu_on   = {"nodes_nature:granite", "nodes_nature:basalt", "nodes_nature:limestone", "nodes_nature:sandstone", "nodes_nature:siltstone", "nodes_nature:claystone", "nodes_nature:silt", "nodes_nature:clay", "nodes_nature:sand", "nodes_nature:gravel"}
-local darkasthaan_on = {"nodes_nature:granite", "nodes_nature:basalt", "nodes_nature:silt", "nodes_nature:clay", "nodes_nature:sand", "nodes_nature:gravel"}
-local moss_on      = {"nodes_nature:marshland_soil", "nodes_nature:marshland_soil_wet", "nodes_nature:highland_soil", "nodes_nature:highland_soil_wet", "nodes_nature:woodland_soil", "nodes_nature:woodland_soil_wet"}
-local mushrooms_on = {"nodes_nature:silt", "nodes_nature:clay", "nodes_nature:sand", "nodes_nature:gravel"}
-local fish_on      = {"nodes_nature:silt", "nodes_nature:silt_wet_salty", "nodes_nature:sand", "nodes_nature:sand_wet_salty"}
-local gravel_on    = {"nodes_nature:granite", "nodes_nature:limestone", "nodes_nature:gneiss", "nodes_nature:conglomerate",}
-local sand_on      = {"nodes_nature:granite", "nodes_nature:limestone", "nodes_nature:gneiss", "nodes_nature:sandstone",}
-local clay_on      = {"nodes_nature:granite", "nodes_nature:limestone", "nodes_nature:gneiss", "nodes_nature:claystone",}
-local silt_on      = {"nodes_nature:granite", "nodes_nature:limestone", "nodes_nature:gneiss", "nodes_nature:siltstone",}
+local mushrooms_on   = {"nodes_nature:silt"             , "nodes_nature:clay"              , "nodes_nature:sand"     , "nodes_nature:gravel"      , }
+local gravel_on      = {"nodes_nature:granite"          , "nodes_nature:limestone"         , "nodes_nature:gneiss"   , "nodes_nature:conglomerate", }
+local sand_on        = {"nodes_nature:granite"          , "nodes_nature:limestone"         , "nodes_nature:gneiss"   , "nodes_nature:sandstone"   , }
+local clay_on        = {"nodes_nature:granite"          , "nodes_nature:limestone"         , "nodes_nature:gneiss"   , "nodes_nature:claystone"   , }
+local gravel_on      = {"group:sand"                    , "nodes_nature:silt"              , }
+local silt_on        = {"nodes_nature:granite"          , "nodes_nature:limestone"         , "nodes_nature:gneiss"   , "nodes_nature:siltstone"     , }
+local fish_on        = {"nodes_nature:silt"             , "nodes_nature:silt_wet_salty"    , "nodes_nature:sand"     , "nodes_nature:sand_wet_salty", }
+local darkasthaan_on = {"nodes_nature:granite"          , "nodes_nature:basalt"            , "nodes_nature:silt"     , 
+                        "nodes_nature:clay"             , "nodes_nature:sand"              , "nodes_nature:gravel"   , }
+local impethu_on     = {"nodes_nature:granite"          , "nodes_nature:basalt"            , "nodes_nature:limestone", "nodes_nature:sandstone", "nodes_nature:siltstone", 
+                        "nodes_nature:claystone"        , "nodes_nature:silt"              , "nodes_nature:clay"     , "nodes_nature:sand"     , "nodes_nature:gravel"   , }
+local moss_on        = {"nodes_nature:marshland_soil"   , "nodes_nature:marshland_soil_wet", "nodes_nature:highland_soil"    , 
+                        "nodes_nature:highland_soil_wet", "nodes_nature:woodland_soil"     , "nodes_nature:woodland_soil_wet", }
+local kelp_on        = {"nodes_nature:gravel"           , "nodes_nature:gravel_wet_salty"  , }
+local seagrass_on    = {"nodes_nature:sand"             , "nodes_nature:sand_wet_salty"    , }
+local sea_lettuce_on = {"nodes_nature:silt"             , "nodes_nature:silt_wet_salty"    , }
+local glow_worm_on   = {"nodes_nature:granite"          , "nodes_nature:gneiss"            , "nodes_nature:limestone", "nodes_nature:jade", }
 
-local grassland_on        = {"nodes_nature:grassland_soil", "nodes_nature:grassland_soil_wet"}
-local marshland_on        = {"nodes_nature:marshland_soil", "nodes_nature:marshland_soil_wet"}
-local highland_on         = {"nodes_nature:highland_soil",  "nodes_nature:highland_soil_wet"}
-local duneland_on         = {"nodes_nature:duneland_soil",  "nodes_nature:duneland_soil_wet"}
-local woodland_on         = {"nodes_nature:woodland_soil",  "nodes_nature:woodland_soil_wet"}
-local barren_grassland_on = {"nodes_nature:grassland_barren_soil", "nodes_nature:grassland_barren_soil_wet"}
-local dry_woodland_on     = {"nodes_nature:woodland_dry_soil", "nodes_nature:woodland_dry_soil_wet"}
-local drylands_on         = {"nodes_nature:grassland_barren_soil", "nodes_nature:woodland_dry_soil"}
-local all_woodland_on     = {"nodes_nature:woodland_soil", "nodes_nature:woodland_soil_wet", "nodes_nature:woodland_dry_soil", "nodes_nature:woodland_dry_soil_wet"}
-
+local woodland_on         = {"nodes_nature:woodland_soil",         "nodes_nature:woodland_soil_wet"        , }
+local marshland_on        = {"nodes_nature:marshland_soil",        "nodes_nature:marshland_soil_wet"       , }
+local grassland_on        = {"nodes_nature:grassland_soil",        "nodes_nature:grassland_soil_wet"       , }
+local duneland_on         = {"nodes_nature:duneland_soil",         "nodes_nature:duneland_soil_wet"        , }
+local highland_on         = {"nodes_nature:highland_soil",         "nodes_nature:highland_soil_wet"        , }
+local barren_grassland_on = {"nodes_nature:grassland_barren_soil", "nodes_nature:grassland_barren_soil_wet", }
+local dry_woodland_on     = {"nodes_nature:woodland_dry_soil",     "nodes_nature:woodland_dry_soil_wet"    , }
+local drylands_on         = {"nodes_nature:grassland_barren_soil", "nodes_nature:woodland_dry_soil"        , }
+local all_woodland_on     = {"nodes_nature:woodland_soil",         "nodes_nature:woodland_soil_wet"        , 
+                             "nodes_nature:woodland_dry_soil",     "nodes_nature:woodland_dry_soil_wet"    , }
 local all_soils_on = {
-	"nodes_nature:marshland_soil",
-	"nodes_nature:marshland_soil_wet",
-	"nodes_nature:grassland_soil",
-	"nodes_nature:grassland_soil_wet",
-	"nodes_nature:highland_soil",
-	"nodes_nature:highland_soil_wet",
-	"nodes_nature:duneland_soil",
-	"nodes_nature:duneland_soil_wet",
-	"nodes_nature:woodland_soil",
-	"nodes_nature:woodland_soil_wet"
+	"nodes_nature:marshland_soil", "nodes_nature:marshland_soil_wet",
+	"nodes_nature:grassland_soil", "nodes_nature:grassland_soil_wet",
+	"nodes_nature:highland_soil",  "nodes_nature:highland_soil_wet" ,
+	"nodes_nature:duneland_soil",  "nodes_nature:duneland_soil_wet" ,
+	"nodes_nature:woodland_soil",  "nodes_nature:woodland_soil_wet" ,
 	}
 local lowland_ymax = 600
 local lowland_ymin = 1
---- Schematics ---
-local s1     = { name = "nodes_nature:gemedi", param2 = 2 }
-local gemedi = {
-	size = {y = 7, x = 1, z = 1},
-	data = {
-		s1, s1, s1, s1, s1, s1, s1
-		},
-	yslice_prob = {
-		{ypos = 0, prob = 255},
-		{ypos = 1, prob = 245},
-		{ypos = 2, prob = 225},
-		{ypos = 3, prob = 205},
-		{ypos = 4, prob = 155},
-		{ypos = 5, prob = 55},
-		{ypos = 6, prob = 35},
-		},
+local canes_list   = { --- Schematics
+	-- name                 y  x  z  
+	{"nodes_nature:gemedi", 7, 1, 1, 255, 245, 225, 205, 155,  55,  35 },
+	{"nodes_nature:cana"  , 7, 1, 1, 255, 255, 255, 255, 230, 155, 105 },
+	{"nodes_nature:tiken" , 7, 1, 1, 255, 255, 255, 255, 230, 155, 105 },
+	{"nodes_nature:chalin", 7, 1, 1 ,255, 255, 255, 255, 230, 155, 105 }, --Exile v4 cane plant, found in dry woodlands
 	}
-local s2     = { name = "nodes_nature:cana",   param2 = 2 }
-local cana   = {
-	size = {y = 7, x = 1, z = 1},
-	data = {
-		s2, s2, s2, s2, s2, s2, s2
-		},
-	yslice_prob = {
-		{ypos = 0, prob = 255},
-		{ypos = 1, prob = 255},
-		{ypos = 2, prob = 255},
-		{ypos = 3, prob = 255},
-		{ypos = 4, prob = 230},
-		{ypos = 5, prob = 155},
-		{ypos = 6, prob = 105},
-		},
-	}
-local s3     = { name = "nodes_nature:tiken",  param2 = 2 }
-local tiken  = {
-	size = {y = 7, x = 1, z = 1},
-	data = {
-		s3, s3, s3, s3, s3, s3, s3
-		},
-	yslice_prob = {
-		{ypos = 0, prob = 255},
-		{ypos = 1, prob = 255},
-		{ypos = 2, prob = 255},
-		{ypos = 3, prob = 255},
-		{ypos = 4, prob = 230},
-		{ypos = 5, prob = 155},
-		{ypos = 6, prob = 105},
-		},
-}
-
---Exile v4 cane plant, found in dry woodlands
-local s4 = { name = "nodes_nature:chalin", param2 = 2 }
-local chalin = {
-   size = {y = 7, x = 1, z = 1},
-   data = {
-      s4, s4, s4, s4, s4, s4, s4
-   },
-   yslice_prob = {
-      {ypos = 0, prob = 255},
-      {ypos = 1, prob = 255},
-      {ypos = 2, prob = 255},
-      {ypos = 3, prob = 255},
-      {ypos = 4, prob = 230},
-      {ypos = 5, prob = 155},
-      {ypos = 6, prob = 105},
-   },
-}
-
+local canes = {}
+for i in ipairs(canes_list) do -- 
+	local shape = { name = canes_list[i][1], param2 = 2 }
+	canes[i]    = {
+		size = {y = canes_list[i][2], x = canes_list[i][3], z = canes_list[i][4]},
+		data = {shape, shape, shape, shape, shape, shape, shape},
+		yslice_prob = {
+			{ypos = 0, prob = canes_list[i][05]},
+			{ypos = 1, prob = canes_list[i][06]},
+			{ypos = 2, prob = canes_list[i][07]},
+			{ypos = 3, prob = canes_list[i][08]},
+			{ypos = 4, prob = canes_list[i][09]},
+			{ypos = 5, prob = canes_list[i][10]},
+			{ypos = 6, prob = canes_list[i][11]},
+			},
+		}
+	end
+local gemedi = canes[1]
+local cana   = canes[2]
+local tiken  = canes[3]
+local chalin = canes[4]
+function find(object)
+	return minetest.get_modpath("mapgen").."/schematics/"..object..".mts"
+	end
 --- Decoration --- 
 local decoration_list = {
 <<<<<<< HEAD
@@ -244,16 +210,15 @@ local decoration_list = {
 	{ --[[ Underground: Cave worms on cave roof    ]]    "nodes_nature:glow_worm"            , "simple"   , glow_worm_on                       , nil,           16,     nil     ,  {offset = -0.04, scale = 0.4, spread = {x= 64,y= 64,z= 64}, seed=11002, octaves = 3, persist = 0.9}              ,               -15,        -1000,               nil, "nodes_nature:glow_worm"        , nil          , nil,         nil                  , nil,           "all_ceilings"                  ,      nil,   3,   nil, },
 >>>>>>> a30803a... Reduce Chalin's invasiveness
 }
-
 for i in ipairs(decoration_list) do
 	minetest.register_decoration(
 		{
 			name           = decoration_list[i][01],
 			deco_type      = decoration_list[i][02],
 			place_on       = decoration_list[i][03],
-			place_offset_y = decoration_list[i][04],	
+			place_offset_y = decoration_list[i][04],
 			sidelen        = decoration_list[i][05],
-			fill_ratio     = decoration_list[i][06],	
+			fill_ratio     = decoration_list[i][06],
 			noise_params   = decoration_list[i][07],
 			y_max          = decoration_list[i][08],
 			y_min          = decoration_list[i][09],
@@ -270,70 +235,36 @@ for i in ipairs(decoration_list) do
 		}
 	)
 end
-
--------- Start node timers ---
--------- get decoration IDs --
-	local gundu_eggs           = minetest.get_decoration_id("animals:gundu_eggs")
-	local sarkamos_eggs        = minetest.get_decoration_id("animals:sarkamos_eggs")
-	local impethu_eggs         = minetest.get_decoration_id("animals:impethu_eggs")
-	local kubwakubwa_eggs      = minetest.get_decoration_id("animals:kubwakubwa_eggs")
-	local kubwakubwa_eggs_land = minetest.get_decoration_id("animals:kubwakubwa_eggs_land")
-	local darkasthaan_eggs     = minetest.get_decoration_id("animals:darkasthaan_eggs")
-	local pegasun_eggs         = minetest.get_decoration_id("animals:pegasun_eggs")
-	local sneachan_eggs        = minetest.get_decoration_id("animals:sneachan_eggs")
-minetest.set_gen_notify(
-	{decoration = true},
-	{
-		gundu_eggs,
-		sarkamos_eggs,
-		impethu_eggs,
-		kubwakubwa_eggs,
-		kubwakubwa_eggs_land,
-		darkasthaan_eggs,
-		pegasun_eggs,
-		sneachan_eggs
+---- Start node timers ----
+local egg_names = {  -- list of strings
+	"gundu_eggs",
+	"sarkamos_eggs",
+	"impethu_eggs",
+	"kubwakubwa_eggs",
+	"kubwakubwa_eggs_land",
+	"darkasthaan_eggs",
+	"pegasun_eggs",
+	"sneachan_eggs",
 	}
-	)
+local eggs_nearby = {}  -- list of decoration IDs
+for i in ipairs(egg_names) do -- get decoration IDs
+	table.insert(eggs_nearby, minetest.get_decoration_id("animals:"..egg_names[i])) -- add the current egg found
+	end
+minetest.set_gen_notify({decoration = true}, eggs_nearby)
 minetest.register_on_generated(
-	function(minp, maxp, blockseed) -- start nodetimers
+	function(minp, maxp, blockseed) -- start node timers
 		local gennotify = minetest.get_mapgen_object("gennotify")
 		local poslist = {}
-		for _, pos in ipairs(gennotify["decoration#"..gundu_eggs] or {}) do
-			local gundu_eggs_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
-			table.insert(poslist, gundu_eggs_pos)
-			end
-		for _, pos in ipairs(gennotify["decoration#"..sarkamos_eggs] or {}) do
-			local sarkamos_eggs_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
-			table.insert(poslist, sarkamos_eggs_pos)
-			end
-		for _, pos in ipairs(gennotify["decoration#"..impethu_eggs] or {}) do
-			local impethu_eggs_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
-			table.insert(poslist, impethu_eggs_pos)
-			end
-		for _, pos in ipairs(gennotify["decoration#"..kubwakubwa_eggs] or {}) do
-			local kubwakubwa_eggs_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
-			table.insert(poslist, kubwakubwa_eggs_pos)
-			end
-		for _, pos in ipairs(gennotify["decoration#"..kubwakubwa_eggs_land] or {}) do
-			local kubwakubwa_eggs_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
-			table.insert(poslist, kubwakubwa_eggs_pos)
-			end
-		for _, pos in ipairs(gennotify["decoration#"..darkasthaan_eggs] or {}) do
-			local darkasthaan_eggs_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
-			table.insert(poslist, darkasthaan_eggs_pos)
-			end
-		for _, pos in ipairs(gennotify["decoration#"..pegasun_eggs] or {}) do
-			local pegasun_eggs_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
-			table.insert(poslist, pegasun_eggs_pos)
-			end
-		for _, pos in ipairs(gennotify["decoration#"..sneachan_eggs] or {}) do
-			local sneachan_eggs_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
-			table.insert(poslist, sneachan_eggs_pos)
+		for i in ipairs(egg_names) do -- iterate across the list of strings
+			for j, pos in ipairs(gennotify["decoration#"..eggs_nearby[i]] or {}) do -- iterate across the 
+				local eggs_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
+				table.insert(poslist, eggs_pos) -- append this position to the list
+				end
 			end
 		if #poslist ~= 0 then
 			for i = 1, #poslist do
-				local pos = poslist[i]
-				minetest.get_node_timer(pos):start(1)
+				local pos = poslist[i] -- grab this position from the list
+				minetest.get_node_timer(pos):start(1) -- start the node timer for this egg
 				end
 			end
 		end
