@@ -629,7 +629,10 @@ minetest.register_node("tech:glass_bottle_green", {
 	groups = {dig_immediate = 2, pottery = 1, temp_pass = 1},
 	sounds = nodes_nature.node_sound_stone_defaults(),
 	use_texture_alpha = true,
-	selection_box = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+	selection_box = {
+		type='fixed',
+		fixed={-0.275, -0.5, -0.225, 0.25, 0.35, 0.275},
+	},
 })
 
 minetest.register_node("tech:glass_bottle_clear", {
@@ -716,7 +719,10 @@ minetest.override_item("tech:glass_bottle_green_saltwater",
 	stack_max = minimal.stack_max_bulky * 2,
 	drawtype = "mesh",
 	mesh = "tech_bottle_liquid.obj",
-	selection_box = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+	selection_box = {
+		type='fixed',
+		fixed={-0.25, -0.5, -0.25, 0.25, 0.35, 0.25},
+	},
 	inventory_image = "tech_bottle_green_icon.png",
 })
 
@@ -757,7 +763,11 @@ minetest.override_item("tech:glass_bottle_clear_saltwater",
 	stack_max = minimal.stack_max_bulky * 2,
 	drawtype = "mesh",
 	mesh = "tech_bottle_liquid.obj",
-	selection_box = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+	selection_box = {
+		type='fixed',
+		fixed={-0.25, -0.5, -0.25, 0.25, 0.35, 0.25},
+	},
+
 	inventory_image = "tech_bottle_clear_icon.png",
 })
 
@@ -799,7 +809,10 @@ minetest.override_item("tech:glass_bottle_green_freshwater",
 	use_texture_alpha = true,
 	sunlight_propagates = true,
 	stack_max = minimal.stack_max_bulky * 2,
-	selection_box = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+	selection_box = {
+		type='fixed',
+		fixed={-0.25, -0.5, -0.25, 0.25, 0.35, 0.25},
+	},
 	inventory_image = "tech_bottle_green_icon.png",
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		local meta = clicker:get_meta()
@@ -862,7 +875,10 @@ minetest.override_item("tech:glass_bottle_clear_freshwater",
 	use_texture_alpha = true,
 	sunlight_propagates = true,
 	stack_max = minimal.stack_max_bulky * 2,
-	selection_box = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+	selection_box = {
+		type='fixed',
+		fixed={-0.25, -0.5, -0.25, 0.25, 0.35, 0.25},
+	},
 	inventory_image = "tech_bottle_clear_icon.png",
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		local meta = clicker:get_meta()
