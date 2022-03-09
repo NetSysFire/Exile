@@ -74,6 +74,12 @@ local bake_redef = {
    end,
    on_timer = function(pos, elapsed)
       local selfname = minetest.get_node(pos).name
+      if bake_table[selfname] then
+	 local posstr = minetest.pos_to_string(pos)
+	 minetest.log("error", "Warning, attempting to run a bake timer at "..
+		      "pos: ",posstr,", set on a non-bakeable node:",selfname)
+	 return true
+      end
       return ncrafting.do_bake(pos, elapsed,
 			       bake_table[selfname][1],
 			       bake_table[selfname][2])
