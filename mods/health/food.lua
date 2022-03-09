@@ -74,7 +74,7 @@ local bake_redef = {
    end,
    on_timer = function(pos, elapsed)
       local selfname = minetest.get_node(pos).name
-      if bake_table[selfname] then
+      if bake_table[selfname] == nil then
 	 local posstr = minetest.pos_to_string(pos)
 	 minetest.log("error", "Warning, attempting to run a bake timer at "..
 		      "pos: "..posstr..", set on a non-bakeable node:"..selfname)
