@@ -271,6 +271,14 @@ end
 -- wood fires
 --
 
+-- Catch up for burning fires
+local function catchup(elapsed)
+   local burn = math.floor(elapsed / 4)
+   if burn > 45 then burn = 45 end -- 3 mins max
+   return burn
+end
+
+
 --unlit wood fires
 minetest.register_node('tech:small_wood_fire_unlit', {
 	description = 'Small Wood Fire (unlit)',
@@ -342,7 +350,7 @@ minetest.register_node('tech:small_wood_fire', {
 			return false
 		elseif can_burn_air(pos, meta, "tech:small_wood_fire_smoldering", "tech:wood_ash" ) then
 			hearth_fire_on(pos)
-			meta:set_int("fuel", fuel - 1)
+			meta:set_int("fuel", fuel - 1 - catchup(elapsed))
 			--add hot air
 			climate.air_temp_source(pos, wood_temp_effect, wood_temp_max, wood_air_c, base_burn_rate)
 			-- Restart timer
@@ -385,7 +393,7 @@ minetest.register_node('tech:large_wood_fire', {
 			return false
 		elseif can_burn_air(pos, meta, "tech:large_wood_fire_smoldering", "tech:wood_ash_block") then
 			hearth_fire_on(pos)
-			meta:set_int("fuel", fuel - 1)
+			meta:set_int("fuel", fuel - 1 - catchup(elapsed))
 			--add hot air
 			climate.air_temp_source(pos, wood_temp_effect*2, wood_temp_max*2, wood_air_c-0.1, base_burn_rate)
 			-- Restart timer
@@ -434,7 +442,7 @@ minetest.register_node('tech:small_wood_fire_smoldering', {
 			return false
 		else
 			if can_smolder(pos, meta, 'tech:small_wood_fire', "tech:wood_ash") then
-				meta:set_int("fuel", fuel - 1)
+				meta:set_int("fuel", fuel - 1 - catchup(elapsed))
 				--add hot air
 				climate.air_temp_source(pos, wood_temp_effect/3, wood_temp_max, wood_air_c+0.3, base_burn_rate)
 				-- Restart timer
@@ -474,7 +482,7 @@ minetest.register_node('tech:large_wood_fire_smoldering', {
 			return false
 		else
 			if can_smolder(pos, meta, 'tech:large_wood_fire', "tech:wood_ash_block") then
-				meta:set_int("fuel", fuel - 1)
+				meta:set_int("fuel", fuel - 1 - catchup(elapsed))
 				--add hot air
 				climate.air_temp_source(pos, (wood_temp_effect*2)/3, wood_temp_max*2, wood_air_c+0.15, base_burn_rate)
 				-- Restart timer
@@ -529,7 +537,7 @@ minetest.register_node('tech:small_charcoal_fire', {
 			return false
 		elseif can_burn_air(pos, meta, "tech:small_charcoal_fire_smoldering", "tech:wood_ash" ) then
 			hearth_fire_on(pos)
-			meta:set_int("fuel", fuel - 1)
+			meta:set_int("fuel", fuel - 1 - catchup(elapsed))
 			--add hot air
 			climate.air_temp_source(pos, char_temp_effect, char_temp_max, char_air_c, base_burn_rate)
 			-- Restart timer
@@ -572,7 +580,7 @@ minetest.register_node('tech:large_charcoal_fire', {
 			return false
 		elseif can_burn_air(pos, meta, "tech:large_charcoal_fire_smoldering", "tech:wood_ash_block") then
 			hearth_fire_on(pos)
-			meta:set_int("fuel", fuel - 1)
+			meta:set_int("fuel", fuel - 1 - catchup(elapsed))
 			--add hot air
 			climate.air_temp_source(pos, char_temp_effect*2, char_temp_max*2, char_air_c -0.1, base_burn_rate)
 			-- Restart timer
@@ -621,7 +629,7 @@ minetest.register_node('tech:small_charcoal_fire_smoldering', {
 			return false
 		else
 			if can_smolder(pos, meta, 'tech:small_charcoal_fire', "tech:wood_ash") then
-				meta:set_int("fuel", fuel - 1)
+				meta:set_int("fuel", fuel - 1 - catchup(elapsed))
 				--add hot air
 				climate.air_temp_source(pos, char_temp_effect/3, char_temp_max, char_air_c +0.3, base_burn_rate)
 				-- Restart timer
@@ -663,7 +671,7 @@ minetest.register_node('tech:large_charcoal_fire_smoldering', {
 			return false
 		else
 			if can_smolder(pos, meta, 'tech:large_charcoal_fire', "tech:wood_ash_block") then
-				meta:set_int("fuel", fuel - 1)
+				meta:set_int("fuel", fuel - 1 - catchup(elapsed))
 				--add hot air
 				climate.air_temp_source(pos, (char_temp_effect*2)/3, char_temp_max*2, char_air_c+0.15, base_burn_rate)
 				-- Restart timer
