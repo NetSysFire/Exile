@@ -481,8 +481,7 @@ local function SelectSeed()
 end
 
 minetest.register_on_mods_loaded(function()
-      dye_source = --ncrafting.loadstore64("dye_source") or
-	 {}
+      dye_source = ncrafting.loadstore64("dye_source") or {}
       CandidateList()
       GenerateDyes(SelectSeed())
       ncrafting.savestore("dye_candidates", dye_candidates)
