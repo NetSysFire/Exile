@@ -469,7 +469,7 @@ end
 local function SelectSeed()
    local doworldseed = minetest.settings:get("ncrafting_worldseed")
    if doworldseed == nil then
-      doworldseed = true
+      doworldseed = false
    end
    if doworldseed == true then
       minetest.log("action","Dye generation phase -- using the world seed")
@@ -481,7 +481,8 @@ local function SelectSeed()
 end
 
 minetest.register_on_mods_loaded(function()
-      dye_source = ncrafting.loadstore64("dye_source") or {}
+      dye_source = --ncrafting.loadstore64("dye_source") or
+	 {}
       CandidateList()
       GenerateDyes(SelectSeed())
       ncrafting.savestore("dye_candidates", dye_candidates)
