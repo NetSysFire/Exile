@@ -328,7 +328,9 @@ minetest.register_node('tech:small_wood_fire', {
 	on_construct = function(pos)
 		--duration of burn
 		local meta = minetest.get_meta(pos)
-		meta:set_int("fuel", base_fuel)
+		if not meta:contains("fuel") then
+		   meta:set_int("fuel", base_fuel)
+		end
 
 		--fire effects..
 		minetest.get_node_timer(pos):start(math.random(base_burn_rate-1,base_burn_rate+1))
@@ -371,8 +373,10 @@ minetest.register_node('tech:large_wood_fire', {
 	on_construct = function(pos)
 		--duration of burn
 		local meta = minetest.get_meta(pos)
-		meta:set_int("fuel", base_fuel*2)
-
+		local fuel = meta:get_int("fuel")
+		if not meta:contains("fuel") then
+		   meta:set_int("fuel", base_fuel*2)
+		end
 		--fire effects
 		minetest.get_node_timer(pos):start(math.random(base_burn_rate-1,base_burn_rate+1))
 	end,
@@ -515,8 +519,9 @@ minetest.register_node('tech:small_charcoal_fire', {
 	on_construct = function(pos)
 		--duration of burn ...less than wood due to loss
 		local meta = minetest.get_meta(pos)
-		meta:set_int("fuel", base_fuel *0.75)
-
+		if not meta:contains("fuel") then
+		   meta:set_int("fuel", base_fuel *0.75)
+		end
 		--fire effects...more consistent burn.
 		minetest.get_node_timer(pos):start(base_burn_rate)
 	end,
@@ -558,7 +563,9 @@ minetest.register_node('tech:large_charcoal_fire', {
 	on_construct = function(pos)
 		--duration of burn
 		local meta = minetest.get_meta(pos)
-		meta:set_int("fuel", base_fuel *2*0.75)
+		if not meta:contains("fuel") then
+		   meta:set_int("fuel", base_fuel *2*0.75)
+		end
 
 		--fire effects
 		minetest.get_node_timer(pos):start(base_burn_rate)
@@ -649,9 +656,6 @@ minetest.register_node('tech:large_charcoal_fire_smoldering', {
 
 	on_construct = function(pos)
 		--duration of burn
-		local meta = minetest.get_meta(pos)
-		--no meta , should only be made from a pre-existing fire
-		--checks
 		minetest.get_node_timer(pos):start(base_burn_rate * 1.5)
 	end,
 	on_timer =function(pos, elapsed)
