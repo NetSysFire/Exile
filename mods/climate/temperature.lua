@@ -17,7 +17,7 @@ climate.get_rain = function(pos, l)
 	end
 	--check if raining and outside
 	if not l then
-		l = minetest.get_node_light({x=pos.x, y=pos.y + 1, z=pos.z}, 0.5)
+		l = minetest.get_natural_light({x=pos.x, y=pos.y + 1, z=pos.z}, 0.5)
 	end
 
 	local w = climate.active_weather.name
@@ -41,7 +41,7 @@ climate.get_snow = function(pos, l)
 	end
 	--check if raining and outside
 	if not l then
-		l = minetest.get_node_light({x=pos.x, y=pos.y + 1, z=pos.z}, 0.5)
+		l = minetest.get_natural_light({x=pos.x, y=pos.y + 1, z=pos.z}, 0.5)
 	end
 
 	local w = climate.active_weather.name
@@ -67,7 +67,7 @@ climate.can_evaporate = function(pos, l)
 	end
 
 	if not l then
-		l = minetest.get_node_light(posa, 0.5)
+		l = minetest.get_natural_light(posa, 0.5)
 	end
 
 	--not when raining, i.e high humidity
@@ -171,7 +171,7 @@ climate.get_damage_weather = function(pos, l)
 	end
 	--check if a damage weather and outside
 	if not l then
-		l = minetest.get_node_light({x=pos.x, y=pos.y + 1, z=pos.z}, 0.5)
+		l = minetest.get_natural_light({x=pos.x, y=pos.y + 1, z=pos.z}, 0.5)
 	end
 
 	if l == 15 and climate.active_weather.damage then
@@ -204,12 +204,11 @@ end
 local adjust_for_shelter = function(pos, temp, av_temp)
 	--Shelter. Brings temp closer to average
 	--daytime dark is the closest proxy for shelter.
-	--can't do darker than artificial light sources, or it will think it's outside
-	local light = minetest.get_node_light({x=pos.x, y=pos.y+1, z=pos.z}, 0.5)
-	if light and light <= 13 then
-		if light <= 9 then
+	local light = minetest.get_natural_light({x=pos.x, y=pos.y+1, z=pos.z}, 0.5)
+	if light and light <= 14 then
+		if light <= 10 then     -- 1-10
 			temp = (temp*0.25)+(av_temp*0.75)
-		elseif light <= 11 then
+		elseif light <= 12 then -- 11-12 
 			temp = (temp*0.5)+(av_temp*0.5)
 		else                    -- 13-14
 			temp = (temp*0.75)+(av_temp*0.25)
@@ -264,10 +263,11 @@ local adjust_active_temp = function(pos, temp)
       temp = -0.0067*pos.y + temp
    end
 
-
    --Shelter.
    temp = adjust_for_shelter(pos, temp, av_temp)
 
+   --Shelter.
+   temp = adjust_for_shelter(pos, temp, av_temp)
 
    --Water and oceans
    if water ~= 0 then

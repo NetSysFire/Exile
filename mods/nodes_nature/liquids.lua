@@ -1,14 +1,18 @@
 ---------------------------------------------------------
 --LIQUIDS
 --
+
+-- Internationalization
+local S = nodes_nature.S
+
 local ran = math.random
 
 
 
 --Water
 local list = {
-	{"salt_water", "Salt Water", 2, 230, 140, true},
-	{"freshwater", "Freshwater", 1, 180, 100, false},
+	{"salt_water", S("Salt Water"), 2, 230, 140, true},
+	{"freshwater", S("Freshwater"), 1, 180, 100, false},
 
 }
 
@@ -26,7 +30,7 @@ for i in ipairs(list) do
 
 
   minetest.register_node("nodes_nature:"..name.."_source", {
-  	description = desc.." Source",
+  	description = S("@1 Source", desc),
   	drawtype = "liquid",
   	tiles = {
   		{
@@ -72,7 +76,7 @@ for i in ipairs(list) do
 
 
   minetest.register_node("nodes_nature:"..name.."_flowing", {
-  	description = desc.." Flowing",
+  	description = S("@1 Flowing", desc),
   	drawtype = "flowingliquid",
   	tiles = {"nodes_nature_"..name..".png"},
   	special_tiles = {
@@ -105,10 +109,12 @@ for i in ipairs(list) do
   	diggable = false,
   	buildable_to = true,
   	is_ground_content = false,
+	liquid_move_physics = false,
+	move_resistance = 0,
   	drop = "",
   	drowning = 1,
   	liquidtype = "flowing",
-		liquid_range = 2,
+	liquid_range = 2,
   	liquid_alternative_flowing = "nodes_nature:"..name.."_flowing",
   	liquid_alternative_source = "nodes_nature:"..name.."_source",
   	liquid_viscosity = 1,
@@ -188,7 +194,7 @@ minetest.override_item("nodes_nature:salt_water_flowing",{
 --Snow
 
 minetest.register_node("nodes_nature:snow", {
-	description = "Snow",
+	description = S("Snow"),
 	tiles = {"nodes_nature_snow.png"},
 	stack_max = minimal.stack_max_bulky *2,
 	paramtype = "light",
@@ -206,7 +212,7 @@ minetest.register_node("nodes_nature:snow", {
 })
 
 minetest.register_node("nodes_nature:snow_block", {
-	description = "Snow Block",
+	description = S("Snow Block"),
 	tiles = {"nodes_nature_snow.png"},
 	stack_max = minimal.stack_max_bulky,
 	temp_effect = -4,
@@ -251,7 +257,7 @@ crafting.register_recipe({
 
 --ice
 minetest.register_node("nodes_nature:ice", {
-	description = "Ice",
+	description = S("Ice"),
 	tiles = {"nodes_nature_ice.png"},
 	stack_max = minimal.stack_max_bulky,
 	paramtype = "light",
@@ -266,7 +272,7 @@ minetest.register_node("nodes_nature:ice", {
 --sea ice
 --for thawing, so it turns back into salt water
 minetest.register_node("nodes_nature:sea_ice", {
-	description = "Sea Ice",
+	description = S("Sea Ice"),
 	tiles = {"nodes_nature_ice.png"},
 	paramtype = "light",
 	drop = "nodes_nature:ice",
@@ -285,7 +291,7 @@ local lava_temp_effect = 60
 local lava_heater = 1100
 
 minetest.register_node("nodes_nature:lava_source", {
-	description = "Lava Source",
+	description = S("Lava Source"),
 	drawtype = "liquid",
 	tiles = {
 		{
@@ -331,7 +337,7 @@ minetest.register_node("nodes_nature:lava_source", {
 })
 
 minetest.register_node("nodes_nature:lava_flowing", {
-	description = "Flowing Lava",
+	description = S("Flowing Lava"),
 	drawtype = "flowingliquid",
 	tiles = {"nodes_nature_lava.png"},
 	special_tiles = {

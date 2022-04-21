@@ -15,7 +15,7 @@
 local light_meter = function(user, pointed_thing)
 
   local name =user:get_player_name()
-  local pos = user:getpos()
+  local pos = user:get_pos()
 
 	minetest.chat_send_player(name, minetest.colorize("#00ff00", "LIGHT MEASUREMENT:"))
 
@@ -58,7 +58,7 @@ local temp_probe = function(user, pointed_thing)
 
 
   local name =user:get_player_name()
-  local pos = user:getpos()
+  local pos = user:get_pos()
 
 	minetest.chat_send_player(name, minetest.colorize("#00ff00", "OBJECT TEMPERATURE MEASUREMENT:"))
 
@@ -106,7 +106,7 @@ local fuel_probe = function(user, pointed_thing)
 
 
   local name =user:get_player_name()
-  local pos = user:getpos()
+  local pos = user:get_pos()
 
 
   local meta = minetest.get_meta(pointed_thing.under)
@@ -154,7 +154,7 @@ local smelter_probe = function(user, pointed_thing)
 
 
   local name =user:get_player_name()
-  local pos = user:getpos()
+  local pos = user:get_pos()
 
 
   local meta = minetest.get_meta(pointed_thing.under)
@@ -204,7 +204,7 @@ local potters_probe = function(user, pointed_thing)
 
 
   local name =user:get_player_name()
-  local pos = user:getpos()
+  local pos = user:get_pos()
 
 
   local meta = minetest.get_meta(pointed_thing.under)
@@ -253,7 +253,7 @@ local chefs_probe = function(user, pointed_thing)
 
 
   local name =user:get_player_name()
-  local pos = user:getpos()
+  local pos = user:get_pos()
 
 
   local meta = minetest.get_meta(pointed_thing.under)
@@ -302,7 +302,7 @@ local farmers_probe = function(user, pointed_thing)
 
 
   local name =user:get_player_name()
-  local pos = user:getpos()
+  local pos = user:get_pos()
 
 
   local meta = minetest.get_meta(pointed_thing.under)
