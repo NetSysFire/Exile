@@ -266,6 +266,8 @@ local adjust_active_temp = function(pos, temp)
    --Shelter.
    temp = adjust_for_shelter(pos, temp, av_temp)
 
+   --Shelter.
+   temp = adjust_for_shelter(pos, temp, av_temp)
 
    --Water and oceans
    if water ~= 0 then
