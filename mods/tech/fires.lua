@@ -29,8 +29,6 @@ local char_temp_effect = wood_temp_effect * 2
 local char_temp_max = wood_temp_max * 2
 local char_air_c = 0.45
 
-inferno = inferno
-
 -------------------------------
 --Functions
 
@@ -748,9 +746,7 @@ minetest.register_node('tech:small_wood_fire_ext', {
 
 	on_dig = on_dig_fire,
 	after_place_node = after_place_fire,
-	on_burn = function(pos)
-	   inferno.ignite(pos)
-	end,
+
 })
 
 
@@ -762,9 +758,6 @@ minetest.register_node('tech:large_wood_fire_ext', {
 
 	on_dig = on_dig_fire,
 	after_place_node = after_place_fire,
-	on_burn = function(pos)
-	   inferno.ignite(pos)
-	end,
 
 })
 
@@ -785,9 +778,6 @@ minetest.register_node('tech:small_charcoal_fire_ext', {
 
 	on_dig = on_dig_fire,
 	after_place_node = after_place_fire,
-	on_burn = function(pos)
-	   inferno.ignite(pos)
-	end,
 
 })
 
@@ -800,9 +790,6 @@ minetest.register_node('tech:large_charcoal_fire_ext', {
 
 	on_dig = on_dig_fire,
 	after_place_node = after_place_fire,
-	on_burn = function(pos)
-	   inferno.ignite(pos)
-	end,
 
 })
 
