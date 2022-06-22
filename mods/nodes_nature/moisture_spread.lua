@@ -320,7 +320,7 @@ minetest.register_abm({
 	label = "Moisture Spread",
 	nodenames = {"group:wet_sediment"},
 	--neighbors = {"group:sediment"},
-	interval = 1815,
+	interval = 615,
 	chance = 1,
 	action = function(...)
 		moisture_spread(...)
