@@ -138,13 +138,22 @@ for i in ipairs(tree_list) do
 	local p2_fruit  = tree_list[i][5]
 	local selbox_fruit = tree_list[i][6]
 	local hardness = tree_list[i][7]
-	local dyecandidate = tree_list[i][8]
-	local dominantcolor = tree_list[i][9] or "none"
+	local hardwood = tree_list[i][8]
+	local dyecandidate = tree_list[i][9]
+	local dominantcolor = tree_list[i][10] or "none"
 	local flamesusceptibility = hardness * 2
 
 	if not selbox_fruit then
 		selbox_fruit = {-3 / 16, -7 / 16, -3 / 16, 3 / 16, 4 / 16, 3 / 16}
 	end
+
+	local gl = {log = 1, choppy = hardness,
+		    flammable = 10 - flamesusceptibility}
+	if hardwood then
+		gl = {log = 1, choppy = hardness, hard_wood = 1,
+		      flammable = 10 - flamesusceptibility}
+	end
+
 
 
 
@@ -204,8 +213,7 @@ for i in ipairs(tree_list) do
 		},
 		paramtype2 = "facedir",
 		is_ground_content = false,
-		groups = {log = 1, choppy = hardness,
-			  flammable = 10 - flamesusceptibility},
+		groups = gl,
 		sounds = nodes_nature.node_sound_wood_defaults(),
 		on_place = minetest.rotate_node,
 	})
@@ -326,22 +334,6 @@ minetest.override_item("nodes_nature:maraka_leaves",{damage_per_second = 1})
 
 --tangkal fruit is good food, but bulky
 minetest.override_item("nodes_nature:tangkal_fruit",{stack_max = minimal.stack_max_medium/2})
-
---exile_experimental trees
-minetest.override_item("nodes_nature:sasaran_cone",{
-			  on_use = function(itemstack, user, pointed_thing)
-
-			     --food poisoning
-			     if random() < 0.08 then
-				HEALTH.add_new_effect(user, {"Food Poisoning", 1})
-			     end
-
-			     --hp_change, thirst_change, hunger_change, energy_change, temp_change, replace_with_item
-			     return HEALTH.use_item(itemstack, user, 0, 0, 1, 0, 0)
-
-			  end,
-})
-
 
 local kagum_groups = table.copy(minetest.registered_nodes["nodes_nature:kagum_pod"].groups)
 kagum_groups.bioluminescent = 1
