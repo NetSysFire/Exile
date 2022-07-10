@@ -20,14 +20,44 @@ minetest.register_alias("mapgen_stone", "nodes_nature:conglomerate")
 minetest.register_alias("mapgen_water_source", "nodes_nature:salt_water_source")
 minetest.register_alias("mapgen_river_water_source", "nodes_nature:freshwater_source")
 
+local enable_v4_biomes
+local biome_default = false
 
 
+--Get experimental biome settings
+--"use_exile_v4_biomes" is world-specific; it uses a separate name from
+--the global UI setting "exile_v4_biomes" to any avoid possible conflicts
+local biomes_enable = minetest.get_mapgen_setting("use_exile_v4_biomes")
+local wp = minetest.get_worldpath()
+if io.open(wp.."/env_meta.txt", "r") == nil then
+   -- This is a hack to see if it's a new world; if so, apply global setting
+   biomes_enable = minetest.settings:get_bool("exile_v4_biomes", biome_default)
+   minetest.set_mapgen_setting("use_exile_v4_biomes",
+			       tostring(biomes_enable))
+elseif biomes_enable == nil then -- pre-existing world, but with no setting?
+   biomes_enable = biome_default -- set the default, then
+   minetest.set_mapgen_setting("use_exile_v4_biomes", tostring(biome_default), true)
+else                           -- get_mapgen_settings gives us a string, so:
+   biomes_enable = biomes_enable == "true" -- convert it to a boolean
+ end
+if biomes_enable == true then
+   minetest.log("action","Exile v4 biomes enabled")
+   enable_v4_biomes = true
+elseif biomes_enable == false then
+   minetest.log("action","Exile v4 biomes disabled")
+else
+   minetest.log("action","v4 biomes setting is invalid!")
+end
 
-
-dofile(path.."/biomes.lua")
-dofile(path.."/ores.lua")
-dofile(path.."/deco.lua")
-
+if enable_v4_biomes then
+   dofile(path.."/biomes.lua")
+   dofile(path.."/ores.lua")
+   dofile(path.."/deco.lua")
+else
+   dofile(path.."/old_biomes.lua")
+   dofile(path.."/ores.lua")
+   dofile(path.."/old_deco.lua")
+end
 
 ---------------------------------------------
 
