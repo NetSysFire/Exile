@@ -34,6 +34,9 @@ food_table = {
 	["nodes_nature:galanta"]            = { 0,  1,   3,  0,  0 },
 	["nodes_nature:lambakap"]           = { 0, 10,  10,  0,  0 },
 	["nodes_nature:tangkal_fruit"]      = { 0,  5,  10, 10,  0 },
+	["nodes_nature:panasee_fruit"]      = { 0,  5,   4,  1,  0 },
+	["nodes_nature:amma_nut"]           = { 0,  0,   1, 10,  0 },
+	["nodes_nature:daoja_berry"]        = { 0,  0,   4,  0,  0 },
 	["nodes_nature:momo"]               = { 0,  1,  12,  0,  0 },
 	["nodes_nature:snow"]               = { 0, 50,  0,-100, -1 },
 	["nodes_nature:snow_block"]         = { 0,100,  0,-200, -2 },
@@ -66,10 +69,8 @@ food_table = {
 	--toxic
 	["nodes_nature:nebiyi"]             = { 0,  0,   0,  0,  0 },
 	["nodes_nature:marbhan"]            = { 0,  0,   0,  0,  0 },
-	-- Maraka nut is dangerous poisonous until processed,
-	-- causes photosensitivity, and risk of hepatotoxicity.
-	-- You can eat it raw if you want to take the risk... famine food for the desperate.
 	["nodes_nature:maraka_nut"]         = { 0,  0,   5,  5,  0 },
+	["nodes_nature:sasaran_cone"]       = { 0,  0,   1,  0,  0 },
 	--medicine
 	["nodes_nature:hakimi"]             = { 0,  0,   0,  0,  0 },
 	["nodes_nature:merki"]              = { 0,  0,   0,  0,  0 },
@@ -110,12 +111,20 @@ food_harm_table = {
 	["nodes_nature:zufani"]          = { { "Food Poisoning",      0.010, 1} },
 	["nodes_nature:galanta"]         = { { "Food Poisoning",      0.008, 1} },
 	["nodes_nature:momo"]            = { { "Food Poisoning",      0.001, 1} },
+
+	--Trees fruit
 	["nodes_nature:maraka_nut"]      = { { "Food Poisoning",      0.001, 1},
 	                                     { "Hepatotoxicity",      0.005, math.floor(math.random(1,4)) },
 	                                     { "Photosensitivity",    0.300, 1} },
-	--Tangkal Fruit is good food, but bulky, contains small amounts of alcohol.
+  ["nodes_nature:sasaran_cone"]    = { { "Food Poisoning",      0.08, 1} },
 	["nodes_nature:tangkal_fruit"]   = { { "Food Poisoning",      0.001, 1},
 	                                     { "Drunk",               0.005, 1} },
+  ["nodes_nature:panasee_fruit"]   = { { "Food Poisoning",      0.001, 1} },
+	--To do: add mild stimulant for Amma (like coffee)?
+	["nodes_nature:amma_nut"]        = { { "Food Poisoning",      0.001, 1} },
+	["nodes_nature:daoja_berry"]     = { { "Food Poisoning",      0.001, 1},
+																			 { "Hepatotoxicity",      0.200, 1}},
+
 	--meat
 	["animals:carcass_invert_small"] = { { "Food Poisoning",      0.1,   1},
 	                                     { "Intestinal Parasites",0.01,  1} },
