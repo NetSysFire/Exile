@@ -22,64 +22,70 @@ grafitti = grafitti
 
 --lime White
 
+local wgraffiti = {
 
---abstract
-grafitti.register_grafitti("tech:lw_x", {image = "tech_paint_lw_x.png"})
-grafitti.register_grafitti("tech:lw_hourglass1", {image = "tech_paint_lw_hourglass1.png"})
-grafitti.register_grafitti("tech:lw_hourglass2", {image = "tech_paint_lw_hourglass2.png"})
-grafitti.register_grafitti("tech:lw_hourglass3", {image = "tech_paint_lw_hourglass3.png"})
-grafitti.register_grafitti("tech:lw_xox", {image = "tech_paint_lw_xox.png"})
+   --abstract
+   "lw_x",
+   "lw_hourglass1",
+   "lw_hourglass2",
+   "lw_hourglass3",
+   "lw_xox",
 
-grafitti.register_grafitti("tech:lw_o", {image = "tech_paint_lw_o.png"})
-grafitti.register_grafitti("tech:lw_odot", {image = "tech_paint_lw_odot.png"})
+   "lw_o",
+   "lw_odot",
 
-grafitti.register_grafitti("tech:lw_quad", {image = "tech_paint_lw_quad.png"})
-grafitti.register_grafitti("tech:lw_quaddot", {image = "tech_paint_lw_quaddot.png"})
+   "lw_quad",
+   "lw_quaddot",
 
-grafitti.register_grafitti("tech:lw_oval", {image = "tech_paint_lw_oval.png"})
-grafitti.register_grafitti("tech:lw_ovalfull", {image = "tech_paint_lw_ovalfull.png"})
+   "lw_oval",
+   "lw_ovalfull",
 
-grafitti.register_grafitti("tech:lw_square", {image = "tech_paint_lw_square.png"})
-grafitti.register_grafitti("tech:lw_squarefull", {image = "tech_paint_lw_squarefull.png"})
+   "lw_square",
+   "lw_squarefull",
 
-grafitti.register_grafitti("tech:lw_lineh", {image = "tech_paint_lw_lineh.png"})
-grafitti.register_grafitti("tech:lw_linev", {image = "tech_paint_lw_linev.png"})
-grafitti.register_grafitti("tech:lw_flute", {image = "tech_paint_lw_flute.png"})
+   "lw_lineh",
+   "lw_linev",
+   "lw_flute",
 
-grafitti.register_grafitti("tech:lw_arrowd", {image = "tech_paint_lw_arrowd.png"})
-grafitti.register_grafitti("tech:lw_arrowu", {image = "tech_paint_lw_arrowu.png"})
-grafitti.register_grafitti("tech:lw_arrowl", {image = "tech_paint_lw_arrowl.png"})
-grafitti.register_grafitti("tech:lw_arrowr", {image = "tech_paint_lw_arrowr.png"})
+   "lw_arrowd",
+   "lw_arrowu",
+   "lw_arrowl",
+   "lw_arrowr",
 
-grafitti.register_grafitti("tech:lw_penni1", {image = "tech_paint_lw_penni1.png"})
-grafitti.register_grafitti("tech:lw_penni2", {image = "tech_paint_lw_penni2.png"})
-grafitti.register_grafitti("tech:lw_pecti1", {image = "tech_paint_lw_pecti1.png"})
-grafitti.register_grafitti("tech:lw_pecti2", {image = "tech_paint_lw_pecti2.png"})
-grafitti.register_grafitti("tech:lw_tecti", {image = "tech_paint_lw_tecti.png"})
-grafitti.register_grafitti("tech:lw_4pole", {image = "tech_paint_lw_4pole.png"})
-grafitti.register_grafitti("tech:lw_avi", {image = "tech_paint_lw_avi.png"})
-grafitti.register_grafitti("tech:lw_scali", {image = "tech_paint_lw_scali.png"})
-grafitti.register_grafitti("tech:lw_bridge", {image = "tech_paint_lw_bridge.png"})
+   "lw_penni1",
+   "lw_penni2",
+   "lw_pecti1",
+   "lw_pecti2",
+   "lw_tecti",
+   "lw_4pole",
+   "lw_avi",
+   "lw_scali",
+   "lw_bridge",
 
-grafitti.register_grafitti("tech:lw_spiral", {image = "tech_paint_lw_spiral.png"})
-grafitti.register_grafitti("tech:lw_spiral2", {image = "tech_paint_lw_spiral2.png"})
-grafitti.register_grafitti("tech:lw_spirald", {image = "tech_paint_lw_spirald.png"})
-grafitti.register_grafitti("tech:lw_spirald2", {image = "tech_paint_lw_spirald2.png"})
-grafitti.register_grafitti("tech:lw_antiq", {image = "tech_paint_lw_antiq.png"})
+   "lw_antiq",
 
-grafitti.register_grafitti("tech:lw_burst1", {image = "tech_paint_lw_burst1.png"})
-grafitti.register_grafitti("tech:lw_burst2", {image = "tech_paint_lw_burst2.png"})
-grafitti.register_grafitti("tech:lw_bolt", {image = "tech_paint_lw_bolt.png"})
+   "lw_burst1",
+   "lw_burst2",
+   "lw_bolt",
 
---less abstract
-grafitti.register_grafitti("tech:lw_tree", {image = "tech_paint_lw_tree.png"})
-grafitti.register_grafitti("tech:lw_hand", {image = "tech_paint_lw_hand.png"})
-grafitti.register_grafitti("tech:lw_hand2", {image = "tech_paint_lw_hand2.png"})
-grafitti.register_grafitti("tech:lw_foot", {image = "tech_paint_lw_foot.png"})
-grafitti.register_grafitti("tech:lw_fig1", {image = "tech_paint_lw_fig1.png"})
-grafitti.register_grafitti("tech:lw_fig2", {image = "tech_paint_lw_fig2.png"})
-grafitti.register_grafitti("tech:lw_fig3", {image = "tech_paint_lw_fig3.png"})
-grafitti.register_grafitti("tech:lw_chrysalis", {image = "tech_paint_lw_chrysalis.png"})
+   --less abstract
+   "lw_hand",
+   "lw_hand2",
+   "lw_foot",
+   "lw_fig1",
+   "lw_fig2",
+   "lw_fig3",
+   "lw_angryface",
+   "lw_sadface",
+   "lw_surpriseface",
+   "lw_fearface",
+   "lw_chrysalis"
+}
+
+for i, name in ipairs(wgraffiti) do
+   grafitti.register_grafitti("tech:"..name,
+			      { image = "tech_paint_"..name..".png"})
+end
 
 grafitti.palette_build("tech:lime_white")
 
@@ -138,3 +144,69 @@ crafting.register_recipe({
 
 ----------------------------------------------------------
 --red ochre
+
+local ochre = "^[colorize:#8f5136"
+
+local ograffiti = { "lw_axe",
+		    "lw_birdstanding",
+		    "lw_dot",
+		    "lw_figure_block",
+		    "lw_figure_running",
+		    "lw_figure_tool",
+		    "lw_fire",
+		    "lw_fish",
+		    "lw_fruit",
+		    "lw_house",
+		    "lw_insect",
+		    "lw_ladder",
+		    "lw_pickaxe",
+		    "lw_pot",
+		    "lw_shovel",
+		    "lw_spider",
+		    "lw_spiral2",	    "lw_spirald2",
+		    "lw_spirald",	    "lw_spiral",
+		    "lw_torch",
+		    "lw_tree",
+		    "lw_water",
+		    "lw_weave",
+		    "wh_arrow_back",
+		    "wh_arrow_down",
+		    "wh_arrow_forward",
+		    "wh_arrow_left",
+		    "wh_arrow_right",
+		    "wh_arrow_twoway",
+		    "wh_arrow_up",
+		    "wh_bed",
+		    "wh_fire",
+		    "wh_house",
+		    "wh_kiln",
+		    "wh_ladder",
+		    "wh_moon",
+		    "wh_sun",
+		    "wh_pottery",
+		    "wh_shelter",
+		    "wh_stairs",
+		    "wh_water"
+}
+
+for i, name in ipairs(ograffiti) do
+   grafitti.register_grafitti("tech:"..name,
+			      { image = "tech_paint_"..name..".png"..ochre})
+end
+
+grafitti.palette_build("tech:ochre_red")
+
+grafitti.register_brush("tech:paint_ochre_red", {
+    description = S("Painting Kit (ochre red)"),
+    inventory_image = "tech_paint_brush_ochre.png",
+    wield_image = "tech_paint_brush_ochre.png^[transformR270",
+    palette = "tech:ochre_red"
+})
+
+crafting.register_recipe({
+	type = "mortar_and_pestle",
+	output = "tech:paint_ochre_red",
+	items = {'nodes_nature:red_ochre', 'tech:stick', 'group:fibrous_plant 4', 'tech:vegetable_oil 4'},
+	level = 1,
+	always_known = true,
+})
