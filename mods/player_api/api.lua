@@ -252,6 +252,9 @@ minetest.register_globalstep(function(dtime)
 				else
 						on_water = false
 				end
+				if minetest.registered_nodes[node_name].groups.trigger == 1 then
+				   triggers.activate(player_pos, player)
+				end
 			end
 
 			--Set head pitch if not on singleplayer and first person view

@@ -26,6 +26,7 @@ dofile(minetest.get_modpath('minimal')..'/settingswarn.lua')
 dofile(minetest.get_modpath('minimal')..'/aliases.lua')
 dofile(minetest.get_modpath('minimal')..'/overrides.lua')
 dofile(minetest.get_modpath('minimal')..'/protection.lua')
+dofile(minetest.get_modpath('minimal')..'/triggers.lua')
 dofile(minetest.get_modpath('minimal')..'/utility.lua')
 
 -- GUI related stuff
