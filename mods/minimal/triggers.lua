@@ -53,8 +53,8 @@ end
 
    local info = {
       ["tr_reset"] = { "Reset player",
-		       "If set to any value, will reset player stats to full"},
-      ["tr_hurt"]  = { "Hurt player", "Will cause <value> damage to player"},
+		       "Will reset player stats to full"},
+      ["tr_hurt"]  = { "Hurt player", "Hits player for <value> damage, 1-20"},
       ["tr_energy"]= { "Set energy", "Set player energy to <value> percent"},
       ["tr_hp"]    = { "Set HP", "Set player hp to <value>, 0-20"},
       ["tr_hunger"]= { "Set hunger", "Set player hunger to <value> percent"},
@@ -119,7 +119,8 @@ local function setformspec(pos)
    local value = nodemeta:get_string(sel)
    local spec =  "formspec_version[6]size[10.5,11]"..
       "dropdown[0.6,0.6;3,0.8;Trigger;"..
-      dropdownstring..";"..index[sel]..";true]"
+      dropdownstring..";"..index[sel]..";true]"..
+      "label[3.3,2;"..info[sel][2].."]"
    if not noinputfield[sel] then
       spec = spec.."textarea[3.3,3;3,1.5;input_value;" ..
 	 S("Value:") .. ";" .. value .. "]"
