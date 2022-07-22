@@ -42,6 +42,17 @@ local function setthirst(player, pname, pos, nmeta, metastring)
    pmeta:set_string("thirst", val) -- thirst is 1-100
 end
 
+local function teleport(player, pname, pos, nmeta, metastring)
+   local vec = vector.from_string(metastring)
+   if not vec then return end
+   if vec then
+      player:set_pos(vector.add(pos, vec))
+   else
+      minetest.log("warning", "Trigger at "..vector.to_string(pos)..
+		   " has an invalid teleport vector")
+   end
+end
+
    triggers.defs = {
       ["tr_reset"] = reset_player,
       ["tr_hurt"] = hurt_player,
@@ -49,6 +60,7 @@ end
       ["tr_hp"] = sethealth,
       ["tr_hunger"] = sethunger,
       ["tr_thirst"] = setthirst,
+      ["tr_teleport"] = teleport,
    }
 
    local info = {
@@ -59,6 +71,8 @@ end
       ["tr_hp"]    = { "Set HP", "Set player hp to <value>, 0-20"},
       ["tr_hunger"]= { "Set hunger", "Set player hunger to <value> percent"},
       ["tr_thirst"]= { "Set thirst", "Set player thirst to <value> percent"},
+      ["tr_teleport"]={"Teleport", "Send player a relative distance, "..
+			  " ( <x>, <y>, <z> )" },
    }
 
 function triggers.activate(pos, player, nodemeta)
