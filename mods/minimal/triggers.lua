@@ -44,13 +44,21 @@ end
 
 local function teleport(player, pname, pos, nmeta, metastring)
    local vec = vector.from_string(metastring)
-   if not vec then return end
-   if vec then
-      player:set_pos(vector.add(pos, vec))
-   else
-      minetest.log("warning", "Trigger at "..vector.to_string(pos)..
-		   " has an invalid teleport vector")
+   if not vec then
+      minetest.chat_send_player(pname, "Invalid teleport vector, "..
+				"must be '(x,y,z)'")
+      return
    end
+   player:set_pos(vec)
+end
+local function relaport(player, pname, pos, nmeta, metastring)
+   local vec = vector.from_string(metastring)
+   if not vec then
+      minetest.chat_send_player(pname, "Invalid teleport vector, "..
+				"must be '(x,y,z)'")
+      return
+   end
+   player:set_pos(vector.add(pos, vec))
 end
 
    triggers.defs = {
@@ -61,6 +69,7 @@ end
       ["tr_hunger"] = sethunger,
       ["tr_thirst"] = setthirst,
       ["tr_teleport"] = teleport,
+      ["tr_relaport"] = relaport,
    }
 
    local info = {
@@ -71,8 +80,10 @@ end
       ["tr_hp"]    = { "Set HP", "Set player hp to <value>, 0-20"},
       ["tr_hunger"]= { "Set hunger", "Set player hunger to <value> percent"},
       ["tr_thirst"]= { "Set thirst", "Set player thirst to <value> percent"},
-      ["tr_teleport"]={"Teleport", "Send player a relative distance, "..
-			  " ( <x>, <y>, <z> )" },
+      ["tr_teleport"]={"Teleport", "Send player an exact xyz position, "..
+			  " ( 125, 9003, -57 )" },
+      ["tr_relaport"]={"Relaport", "Send player a relative xyz distance, "..
+			  " ( 1, 10, -5 )" },
    }
 
 function triggers.activate(pos, player, nodemeta)
