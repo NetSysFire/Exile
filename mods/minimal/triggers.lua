@@ -193,5 +193,35 @@ if minetest.is_creative_enabled() then
 	      recfields(pos, formname, fields, sender)
 	      setformspec(pos)
 	end,
+	after_place_node = function(pos, placer, itemstack, pointed_thing)
+	   local meta = minetest.get_meta(pos)
+	   local imeta = itemstack:get_meta()
+	   for nm, _ in pairs(triggers.defs) do
+	      local val = imeta:get_string(nm)
+	      if val ~= "" then
+		 meta:set_string(nm, val)
+	      end
+	   end
+	   local infotext = imeta:get_string("description")
+	   if infotext ~= "" then
+	      meta:set_string("infotext", infotext)
+	   end
+	end,
+	preserve_metadata = function(pos, oldnode, oldmeta, drops)
+	   local stack_meta = drops[1]:get_meta()
+	   local desc = ""
+	   local pmcomma = ""
+	   for nm, _ in pairs(triggers.defs) do
+	      local val = oldmeta[nm] or ""
+	      if val ~= "" then
+		 stack_meta:set_string(nm, val)
+		 desc = desc..pmcomma..nm:gsub("tr_","")
+		 pmcomma = ", "
+	      end
+	   end
+	   if desc ~= "" then
+	      stack_meta:set_string("description", "Configured trigger\n"..desc)
+	   end
+	end,
    })
 end
