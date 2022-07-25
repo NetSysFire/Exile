@@ -3,6 +3,25 @@ triggers = {}
 triggers.player = {} -- for timeouts on effects
 local S = core.get_translator(minimal.modname)
 
+-- Functions: ------------------------------------------------------------
+
+local usedlist = {} -- temporarily remember who has activated each trigger
+
+local function usedrecently(pos, pname)
+   -- Allows a trigger to be used by a player just once per server start
+   -- #TODO: is it worth saving this to prevent stop/start to reuse triggers?
+   local posstr = vector.to_string(pos)
+   if usedlist[posstr] == nil then
+      usedlist[posstr] = {} -- this trigger hasn't been used by <player> yet
+      usedlist[posstr][pname] = true
+      return false
+   end
+   if usedlist[posstr][pname] == true then
+      return true
+   end
+end
+
+
 -- Triggers: -------------------------------------------------------------
 
 local function reset_player(player, pname, pos, nmeta, metastring)
@@ -61,6 +80,19 @@ local function relaport(player, pname, pos, nmeta, metastring)
    player:set_pos(vector.add(pos, vec))
 end
 
+local function giveitem(player, pname, pos, nmeta, metastring)
+   if usedrecently(pos, pname) then
+      return -- You'll have to try harder for freebies, Jack
+   end
+   local stack = ItemStack(metastring)
+   local inv = player:get_inventory()
+   if inv:room_for_item("main", stack) then
+      inv:add_item("main", stack)
+   else -- no room for items? happy birthday to the ground!
+      minetest.item_drop(stack, player, pos)
+   end
+end
+
    triggers.defs = {
       ["tr_reset"] = reset_player,
       ["tr_hurt"] = hurt_player,
@@ -70,6 +102,7 @@ end
       ["tr_thirst"] = setthirst,
       ["tr_teleport"] = teleport,
       ["tr_relaport"] = relaport,
+      ["tr_giveitem"] = giveitem,
    }
 
    local info = {
@@ -84,6 +117,7 @@ end
 			  " ( 125, 9003, -57 )" },
       ["tr_relaport"]={"Relaport", "Send player a relative xyz distance, "..
 			  " ( 1, 10, -5 )" },
+      ["tr_giveitem"]={"Give item", "Gives an item, in itemstring format"},
    }
 
 function triggers.activate(pos, player, nodemeta)
