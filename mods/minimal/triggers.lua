@@ -80,6 +80,23 @@ local function relaport(player, pname, pos, nmeta, metastring)
    player:set_pos(vector.add(pos, vec))
 end
 
+local function clearinv(player, pname, pos, nmeta, metastring)
+   metastring = "main"
+   --[[
+   if metastring ~= "main" and metastring ~= "cloths"
+      and metastring ~="both" then
+   -- #TODO: clearing clothing doesn't update player appearance, fix it
+      return
+      end ]]--
+   local inv = player:get_inventory()
+   if metastring == "main" or metastring == "both"  then
+      inv:set_list("main", {})
+   end
+   if metastring == "cloths" or metastring == "both"  then
+      inv:set_list("cloths", {})
+      player_api.compose_cloth(player)
+   end
+end
 local function giveitem(player, pname, pos, nmeta, metastring)
    if usedrecently(pos, pname) then
       return -- You'll have to try harder for freebies, Jack
@@ -102,6 +119,7 @@ end
       ["tr_thirst"] = setthirst,
       ["tr_teleport"] = teleport,
       ["tr_relaport"] = relaport,
+      ["tr_clearinv"] = clearinv,
       ["tr_giveitem"] = giveitem,
    }
 
@@ -117,6 +135,7 @@ end
 			  " ( 125, 9003, -57 )" },
       ["tr_relaport"]={"Relaport", "Send player a relative xyz distance, "..
 			  " ( 1, 10, -5 )" },
+      ["tr_clearinv"]={"Clear inventory", "Empties main inventory"},
       ["tr_giveitem"]={"Give item", "Gives an item, in itemstring format"},
    }
 
@@ -168,7 +187,10 @@ for nm, val in pairs(info) do
 end
 
 -- table of triggers with no input field
-local noinputfield = { ["tr_reset"] = true, }
+local noinputfield = {
+   ["tr_reset"] = true,
+   ["tr_clearinv"] = true,
+}
 
 local function setformspec(pos)
    --local node = minetest.get_node(pos)
