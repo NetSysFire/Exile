@@ -49,3 +49,27 @@ function minimal.safe_landing_spot(pos)
       return true
    end
 end
+
+function minimal.invlists2string(lists)
+   local cleantable = {}
+   if not lists then return end
+   for listname, list in pairs(lists) do
+      cleantable[listname] = {}
+      for i = 1, #list do
+	 cleantable[listname][i] = list[i]:to_string()
+      end
+   end
+   return minetest.serialize(cleantable)
+end
+function minimal.string2invlists(string)
+   local table = minetest.deserialize(string)
+   if not table then return end
+   local newlist = {}
+   for listname, list in pairs(table) do
+      newlist[listname] = {}
+      for i = 1, #list do
+	 newlist[listname][i] = ItemStack(list[i])
+      end
+   end
+   return newlist
+end

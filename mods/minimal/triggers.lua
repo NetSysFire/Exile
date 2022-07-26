@@ -97,6 +97,12 @@ local function clearinv(player, pname, pos, nmeta, metastring)
       player_api.compose_cloth(player)
    end
 end
+local function setinventory(player, pname, pos, nmeta, metastring)
+   metastring = "main" -- until we can set clothing inv too
+   local plinv = player:get_inventory()
+   local triginv = nmeta:get_inventory():get_list(metastring)
+   plinv:set_list(metastring, triginv)
+end
 local function giveitem(player, pname, pos, nmeta, metastring)
    if usedrecently(pos, pname) then
       return -- You'll have to try harder for freebies, Jack
@@ -110,34 +116,43 @@ local function giveitem(player, pname, pos, nmeta, metastring)
    end
 end
 
-   triggers.defs = {
-      ["tr_reset"] = reset_player,
-      ["tr_hurt"] = hurt_player,
-      ["tr_energy"] = setenergy,
-      ["tr_hp"] = sethealth,
-      ["tr_hunger"] = sethunger,
-      ["tr_thirst"] = setthirst,
-      ["tr_teleport"] = teleport,
-      ["tr_relaport"] = relaport,
-      ["tr_clearinv"] = clearinv,
-      ["tr_giveitem"] = giveitem,
-   }
+triggers.defs = {
+   ["tr_reset"] = reset_player,
+   ["tr_hurt"] = hurt_player,
+   ["tr_energy"] = setenergy,
+   ["tr_hp"] = sethealth,
+   ["tr_hunger"] = sethunger,
+   ["tr_thirst"] = setthirst,
+   ["tr_teleport"] = teleport,
+   ["tr_relaport"] = relaport,
+   ["tr_clearinv"] = clearinv,
+   ["tr_setinv"] = setinventory,
+   ["tr_giveitem"] = giveitem,
+}
 
-   local info = {
-      ["tr_reset"] = { "Reset player",
-		       "Will reset player stats to full"},
-      ["tr_hurt"]  = { "Hurt player", "Hits player for <value> damage, 1-20"},
-      ["tr_energy"]= { "Set energy", "Set player energy to <value> percent"},
-      ["tr_hp"]    = { "Set HP", "Set player hp to <value>, 0-20"},
-      ["tr_hunger"]= { "Set hunger", "Set player hunger to <value> percent"},
-      ["tr_thirst"]= { "Set thirst", "Set player thirst to <value> percent"},
-      ["tr_teleport"]={"Teleport", "Send player an exact xyz position, "..
-			  " ( 125, 9003, -57 )" },
-      ["tr_relaport"]={"Relaport", "Send player a relative xyz distance, "..
-			  " ( 1, 10, -5 )" },
-      ["tr_clearinv"]={"Clear inventory", "Empties main inventory"},
-      ["tr_giveitem"]={"Give item", "Gives an item, in itemstring format"},
-   }
+local info = {
+   ["tr_reset"] = { "Reset player",
+		    "Will reset player stats to full"},
+   ["tr_hurt"]  = { "Hurt player", "Hits player for <value> damage, 1-20"},
+   ["tr_energy"]= { "Set energy", "Set player energy to <value> percent"},
+   ["tr_hp"]    = { "Set HP", "Set player hp to <value>, 0-20"},
+   ["tr_hunger"]= { "Set hunger", "Set player hunger to <value> percent"},
+   ["tr_thirst"]= { "Set thirst", "Set player thirst to <value> percent"},
+   ["tr_teleport"]={"Teleport", "Send player an exact xyz position, "..
+		       " ( 125, 9003, -57 )" },
+   ["tr_relaport"]={"Relaport", "Send player a relative xyz distance, "..
+		       " ( 1, 10, -5 )" },
+   ["tr_clearinv"]={"Clear inventory", "Empties main inventory"},
+   ["tr_setinv"]  ={"Set inventory", "Overwrite player inv with contents"},
+   ["tr_giveitem"]={"Give item", "Gives an item, in itemstring format"},
+}
+
+-- table of triggers with no input field
+local noinputfield = {
+   ["tr_reset"] = true,
+   ["tr_clearinv"] = true,
+   ["tr_setinv"] = true,
+}
 
 function triggers.activate(pos, player, nodemeta)
    if not player or not minetest.is_player(player) then
@@ -186,12 +201,6 @@ for nm, val in pairs(info) do
    comma = ","
 end
 
--- table of triggers with no input field
-local noinputfield = {
-   ["tr_reset"] = true,
-   ["tr_clearinv"] = true,
-}
-
 local function setformspec(pos)
    --local node = minetest.get_node(pos)
    local nodemeta = minetest.get_meta(pos)
@@ -217,6 +226,10 @@ local function setformspec(pos)
    spec = spec.."button[7.85,3.375;1.25,0.75;btn_set;" .. S("Set") .. "]" ..
       "button[9.25,3.375;1.25,0.75;btn_unset;" .. S("Unset") .. "]"
 
+   if sel == "tr_setinv" then
+      spec = spec.."list[context;main;0,4;8,4;]list[current_player;"..
+	 "main;0,8;8,4;]"
+   end
    nodemeta:set_string("formspec", spec)
 end
 
@@ -283,10 +296,19 @@ if minetest.is_creative_enabled() then
 		 meta:set_string(nm, val)
 	      end
 	   end
+	   local minv = meta:get_inventory()
+	   minv:set_size("main", 8*2)
+	   local iinv = minimal.string2invlists(imeta:get_string("inventory"))
+	   if iinv ~= "" and iinv ~= nil then
+	      print("setting minv")
+	      minv:set_lists(iinv)
+	   end
 	   local infotext = imeta:get_string("description")
 	   if infotext ~= "" then
 	      meta:set_string("infotext", infotext)
 	   end
+	   meta:set_string("tr_selected",imeta:get_string("tr_selected"))
+	   setformspec(pos)
 	end,
 	preserve_metadata = function(pos, oldnode, oldmeta, drops)
 	   local stack_meta = drops[1]:get_meta()
@@ -300,9 +322,13 @@ if minetest.is_creative_enabled() then
 		 pmcomma = ", "
 	      end
 	   end
+	   local oinv = minetest.get_meta(pos):get_inventory()
+	   local list = oinv:get_lists()
+	   stack_meta:set_string("inventory", minimal.invlists2string(list))
 	   if desc ~= "" then
 	      stack_meta:set_string("description", "Configured trigger\n"..desc)
 	   end
+	   stack_meta:set_string("tr_selected", oldmeta["tr_selected"])
 	end,
    })
 end
