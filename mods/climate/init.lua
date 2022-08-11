@@ -28,13 +28,16 @@ local store = minetest.get_mod_storage()
 
 -- Adds weather to register_weathers table
 --all possible weather states
-local registered_weathers = {}
+climate.registered_weathers = {}
+climate.weather_index = {}
 
 -- Keeps sound handler references
 local sound_handlers = {}
 
 climate.register_weather = function(weather_obj)
-	table.insert(registered_weathers, weather_obj)
+   climate.registered_weathers[weather_obj.name] =
+      weather_obj
+   table.insert(climate.weather_index, weather_obj.name)
 end
 
 dofile(modpath .. "/particles.lua")
@@ -77,7 +80,8 @@ local plvl_mid = 25
 
 --what weather is on, and how long it will last, and temp
 --random values that should get overriden by mod storage
-climate.active_weather = registered_weathers[math.random(#registered_weathers)]
+climate.active_weather = climate.registered_weathers[
+   climate.weather_index[math.random(#climate.weather_index)]]
 climate.active_temp = math.random(15,25)
 climate.sea_temp = climate.active_temp * math.random(0.6,8)
 local active_weather_interval = 1
@@ -86,6 +90,9 @@ local active_weather_interval = 1
 --random walk, for temp
 local ran_walk_range = 10
 local ran_walk = math.random(-ran_walk_range,ran_walk_range)
+
+--cache of players with weather overrides
+climate.override = {}
 
 --------------------------
 -- Functions
@@ -115,10 +122,55 @@ local function get_seasonal_waves()
    return dc_wav, sea_wav
 end
 
------------------
+--------------------
+--player functions
+function climate.get_player_weather(p_name)
+   local ovr = climate.override[p_name]
+   local wth = climate.registered_weathers[ovr]
+   if ovr == nil or wth == nil then
+      return climate.active_weather
+   end
+   return wth
+end
+
+local prev_sound = {}
+local function update_player_sounds(p_name, pos)
+   if not pos then
+      pos = minetest.get_player_by_name(p_name):get_pos()
+   end
+   local active_weather = climate.get_player_weather(p_name)
+   local sound = sound_handlers[p_name]
+   if sound and prev_sound[p_name]
+      and prev_sound[p_name] ~= active_weather.name then
+      minetest.sound_stop(sound)
+      sound_handlers[p_name] = nil
+   end
+   if pos.y > -12 then -- run weather sounds
+      if sound == nil and active_weather.sound_loop then
+	 sound_handlers[p_name] = minetest.sound_play(
+	    active_weather.sound_loop, {to_player = p_name, loop = true})
+      end
+   elseif pos.y < -11 and sound then
+      local x = 1-(-1*pos.y-12)/5
+	if x < 0 then
+	   minetest.sound_stop(sound)
+	   sound_handlers[p_name] = nil
+	else
+	   minetest.sound_fade(sound, 0.5, x)
+	end
+   elseif pos.y > -17 and active_weather.sound_loop and not sound then
+      sound_handlers[p_name] =
+	   minetest.sound_play(climate.active_weather.sound_loop,
+			       {to_player = p_name, loop = true, gain = 0.1})
+   end
+   prev_sound[p_name] = active_weather.name
+end
+
+--------------------
 --set the sky, for on join and when new weather set
 local function set_sky_clouds(player)
-	local active_weather = climate.active_weather
+	local p_name = player:get_player_name()
+	local active_weather = climate.get_player_weather(p_name)
 
 	player:set_sky(active_weather.sky_data)
 	player:set_clouds(active_weather.cloud_data)
@@ -132,19 +184,26 @@ local function set_sky_clouds(player)
 	player:set_stars(active_weather.star_data)
 end
 
------------------
-local function get_weather_table(name, registered_weathers)
-	for i, reg_weather in ipairs(registered_weathers) do
-	   if name == reg_weather.name then
-	      local active_weather = reg_weather
-	      return active_weather
-	   end
-	end
-	--error, got a name it can't find
-	--currently will likely make it crash
-	minetest.log("error", "Climate: "..name.." not found")
-	return
-
+function climate.set_override(p_name, p_obj, w_name)
+   if p_name and not p_obj then
+      p_obj = minetest.get_player_by_name(p_name)
+   end
+   if p_obj and not p_name then
+      p_name = p_obj:get_player_name()
+   end
+   if climate.override[p_name] then
+      --remove old override, particles first
+      climate.clear_player_particle(p_name)
+      climate.override[p_name] = nil
+      p_obj:get_meta():set_string("weather_override", "")
+   end
+   local wth = climate.registered_weathers[w_name]
+   if wth then
+      climate.override[p_name] = w_name
+      climate.add_player_particle(p_name, w_name, wth)
+   end
+   set_sky_clouds(p_obj)
+   update_player_sounds(p_name)
 end
 
 -------------------------
@@ -173,7 +232,7 @@ minetest.register_on_joinplayer(function(player)
 
       if w_name ~= "" then
 	 --check valid
-	 local weather = get_weather_table(w_name, registered_weathers)
+	 local weather = climate.registered_weathers[w_name]
 	 if weather then
 	    climate.active_weather = weather
 	    minetest.log("action", "Loaded a valid weather: "..w_name)
@@ -208,16 +267,20 @@ minetest.register_on_joinplayer(function(player)
 
    end
 
+   local p_name = player:get_player_name()
+   -- load any prior weather overrides
+   local ovr = player:get_meta():get_string("weather_override")
+   if ovr ~= "" then
+      climate.override[p_name] = ovr
+   end
    --set weather effects for this player
    set_sky_clouds(player)
-   local p_name = player:get_player_name()
-   if climate.active_weather.sound_loop then
-      sound_handlers[p_name] = minetest.sound_play(
-	 climate.active_weather.sound_loop, {to_player = p_name, loop = true})
-   end
+   update_player_sounds(p_name)
    minetest.chat_send_player(p_name, exiledatestring())
 end)
 
+--------------------
+--world functions
 local function select_new_active_weather()
     --select a new active_weather from probabilities
     --it will loop through and try to change the weather
@@ -253,13 +316,13 @@ local function select_new_active_weather()
     if new_weather_name and new_weather_name ~= climate.active_weather.name then
 
       --we need to update the sky and set the new
-       climate.active_weather = get_weather_table(new_weather_name,
-						  registered_weathers)
+       climate.active_weather = climate.registered_weathers[new_weather_name]
     end
     --do for each player
     for _,player in ipairs(minetest.get_connected_players()) do
        --set sky and clouds for new state using the new active_weather
        set_sky_clouds(player)
+       update_player_sounds(player:get_player_name())
     end
 end
 
@@ -292,32 +355,18 @@ local function set_world_temperature()
     store:set_float("ran_walk", ran_walk)
 end
 
-local function update_player_sounds(p_name)
-   --remove old sounds
-   local sound = sound_handlers[p_name]
-   if sound ~= nil then
-      minetest.sound_stop(sound)
-      sound_handlers[p_name] = nil
-   end
-   --add new loop
-   if climate.active_weather.sound_loop then
-      sound_handlers[p_name] = minetest.sound_play(
-	 climate.active_weather.sound_loop, {to_player = p_name, loop = true})
-   end
-end
-
 --------------------------
 -- Main step
 --------------------------
 
 local timer = 0
-local timer_p = 0
 local timer_r = 0
+local timer_s = 0
 
 minetest.register_globalstep(function(dtime)
-  local updatesound = false
   timer = timer + dtime
   timer_r = timer_r + dtime
+  timer_s = timer_s + dtime
   --update weather state
   if timer > active_weather_interval then
      --timer has expired, switch to a new weather state
@@ -329,48 +378,19 @@ minetest.register_globalstep(function(dtime)
      --mod_storage:set_float('active_weather_interval', active_weather_interval)
      set_world_temperature()
      select_new_active_weather()
-     updatesound = true
   end
   if timer_r >= 60 then -- it's time to record changes
      record_climate_history(climate)
      store:set_string("climate_history", get_climate_history())
      timer_r = 0
   end
-  timer_p = timer_p + dtime
-  for _,player in ipairs(minetest.get_connected_players()) do
-     local pos = player:get_pos()
-     local p_name = player:get_player_name()
-     local sound = sound_handlers[p_name]
-     if pos.y > -12 then
-	if updatesound or sound == nil then
-	   update_player_sounds(p_name)
-	end
-	--fast weather effects for aboveground players
-	if (climate.active_weather.particle_interval and
-	    timer_p > climate.active_weather.particle_interval) then
-	   -- do particle effects for current weather
-	   climate.active_weather.particle_function(player)
-	end
-     elseif pos.y < -11 and sound then
-	local x = 1-(-1*pos.y-12)/5
-	if x < 0 then
-	   minetest.sound_stop(sound)
-	   sound_handlers[p_name] = nil
-	else
-	   minetest.sound_fade(sound, 0.5, x)
-	end
-     elseif pos.y > -17 and not sound then
-	sound_handlers[p_name] =
-	   minetest.sound_play(climate.active_weather.sound_loop,
-			       {to_player = p_name, loop = true, gain = 0.1})
+  if timer_s >= 0.1 then -- update sound levels for underground transition
+     for _,player in ipairs(minetest.get_connected_players()) do
+	local ppos = player:get_pos()
+	update_player_sounds(player:get_player_name(), ppos)
      end
+     timer_s = 0
   end
-
-  if (climate.active_weather.particle_interval and
-      timer_p > climate.active_weather.particle_interval) then
-     timer_p = 0
-  end
-
 end)
 
 --------------------------------------------------------------------
@@ -428,13 +448,13 @@ minetest.register_chatcommand("set_weather", {
        --check valid
        if param == "help" then
 	  local wlist = "Available weather states:\n"
-	  for i = 1,#registered_weathers do
-	     wlist = wlist..registered_weathers[i].name.."\n"
+	  for i = 1,#climate.weather_index do
+	     wlist = wlist..climate.weather_index[i].."\n"
 	  end
 	  return false, wlist
        end
 
-       local weather = get_weather_table(param, registered_weathers)
+       local weather = climate.registered_weathers[param]
        if weather then
 	  climate.active_weather = weather
 	  --do for each player
@@ -442,18 +462,7 @@ minetest.register_chatcommand("set_weather", {
 	     --set sky and clouds for new state using the new active_weather
 
 	     set_sky_clouds(player)
-
-	     --remove old sounds
-	     local p_name = player:get_player_name()
-	     local sound = sound_handlers[p_name]
-	     if sound ~= nil then
-		minetest.sound_stop(sound)
-		sound_handlers[p_name] = nil
-	     end
-	     --add new loop
-	     if climate.active_weather.sound_loop then
-		sound_handlers[p_name] = minetest.sound_play(climate.active_weather.sound_loop, {to_player = p_name, loop = true})
-	     end
+	     update_player_sounds(player:get_player_name())
 
 	  end
 	  --only actually needed on log out,... but that doesn't work
@@ -496,4 +505,24 @@ minetest.register_chatcommand("set_tempscale", {
 	  meta:set_string("TempScalePref", "Celsius")
        end
     end,
+})
+
+minetest.register_chatcommand("set_override", {
+    params = "<weather name>",
+    description = "Sets your weather override",
+    func = function(name, param)
+       if param == "" or param == "help" then
+	  return false
+       end
+       if param == "none" then
+	  climate.set_override(name, nil, "")
+	  return
+       end
+       local weather = climate.registered_weathers[param]
+       if weather then
+	  climate.set_override(name, nil, param)
+       else
+	  return false, "argument must be a valid weather name, or none"
+       end
+    end
 })

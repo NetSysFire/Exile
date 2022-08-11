@@ -116,6 +116,16 @@ local function giveitem(player, pname, pos, nmeta, metastring)
    end
 end
 
+local function setweather(player, pname, pos, nmeta, metastring)
+   if usedrecently(pos, pname) then
+      return -- Don't keep doing it
+   end
+   climate.set_override(pname, player, metastring)
+end
+local function resetweather(player, pname, pos, nmeta, metastring)
+   climate.set_override(pname, player, "")
+end
+
 triggers.defs = {
    ["tr_reset"] = reset_player,
    ["tr_hurt"] = hurt_player,
@@ -128,6 +138,8 @@ triggers.defs = {
    ["tr_clearinv"] = clearinv,
    ["tr_setinv"] = setinventory,
    ["tr_giveitem"] = giveitem,
+   ["tr_setweather"] = setweather,
+   ["tr_resetweather"] = resetweather,
 }
 
 local info = {
@@ -145,6 +157,9 @@ local info = {
    ["tr_clearinv"]={"Clear inventory", "Empties main inventory"},
    ["tr_setinv"]  ={"Set inventory", "Overwrite player inv with contents"},
    ["tr_giveitem"]={"Give item", "Gives an item, in itemstring format"},
+   ["tr_setweather"]={"Set weather", "Changes weather displayed to player"..
+			 "\nUse /set_weather help to list available weather."},
+   ["tr_resetweather"]={"Reset weather", "Restores normal weather for player"},
 }
 
 -- table of triggers with no input field
@@ -152,6 +167,7 @@ local noinputfield = {
    ["tr_reset"] = true,
    ["tr_clearinv"] = true,
    ["tr_setinv"] = true,
+   ["tr_resetweather"] = true,
 }
 
 function triggers.activate(pos, player, nodemeta)
@@ -300,7 +316,6 @@ if minetest.is_creative_enabled() then
 	   minv:set_size("main", 8*2)
 	   local iinv = minimal.string2invlists(imeta:get_string("inventory"))
 	   if iinv ~= "" and iinv ~= nil then
-	      print("setting minv")
 	      minv:set_lists(iinv)
 	   end
 	   local infotext = imeta:get_string("description")

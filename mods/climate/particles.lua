@@ -2,6 +2,8 @@
 -- Particles helpers
 ---------------------------------------
 
+local particle_idx = {} -- a list of weathers currently active for particles
+local particle_table = {}
 
 -- trying to locate position for particles by player look direction for performance reason.
 -- it is costly to generate many particles around player so goal is focus mainly on front view.
@@ -9,9 +11,9 @@ local get_random_pos = function(player, offset)
 	local look_dir = player:get_look_dir()
 	local player_pos = player:get_pos()
 
-	local random_pos_x = 0
-	local random_pos_y = 0
-	local random_pos_z = 0
+	local random_pos_x
+	local random_pos_y
+	local random_pos_z
 
 	if look_dir.x > 0 then
 		if look_dir.z > 0 then
@@ -71,9 +73,6 @@ local is_outdoor = function(pos, offset_y)
 	return false
 end
 
-
-
-
 climate.add_particle = function(vel, acc, ext, size, tex, player)
    if not player then
       return
@@ -117,7 +116,7 @@ climate.add_particle = function(vel, acc, ext, size, tex, player)
       top = 6
    }
 
-   local random_pos = get_random_pos(player, offset)
+   random_pos = get_random_pos(player, offset)
 
    --check if under cover
    if is_outdoor(random_pos) then
@@ -155,7 +154,6 @@ climate.add_blizzard_particle = function(velxz, vely, accxz, accy, ext,
    }
 
    local random_pos = get_random_pos(player, offset)
-
    local name = player:get_player_name()
 
    --check if under cover
@@ -183,7 +181,7 @@ climate.add_blizzard_particle = function(velxz, vely, accxz, accy, ext,
       top = 3
    }
 
-   local random_pos = get_random_pos(player, offset)
+   random_pos = get_random_pos(player, offset)
 
    --check if under cover
    if is_outdoor(random_pos) then
@@ -202,3 +200,85 @@ climate.add_blizzard_particle = function(velxz, vely, accxz, accy, ext,
       })
    end
 end
+
+function climate.add_player_particle(p_name, w_name, w_def)
+   local p_obj = minetest.get_player_by_name(p_name)
+   -- check player object: in case they disconnected, don't add them
+   if not p_obj then return end
+   -- no particles needed for some weathers
+   if w_def.particle_function == nil then
+      return
+   end
+   if not particle_table[w_name] then -- track a new weather's particles
+      particle_table[w_name] = { w_func = w_def.particle_function,
+				 duration = w_def.particle_interval,
+				 timer = 0,
+				 plist = { [p_name] = p_obj } }
+      table.insert(particle_idx, w_name)
+   else -- add player to an existing table entry
+      particle_table[w_name].plist[p_name] = p_obj
+      if not particle_idx[w_name] then
+	 table.insert(particle_idx, w_name)
+      end
+   end
+end
+
+local function remove_from_idx(weathername)
+   for i = 1, #particle_idx do
+      if particle_idx[i] == weathername then
+	 table.remove(particle_idx, i)
+      end
+   end
+end
+
+function climate.clear_player_particle(p_name, w_name)
+   if not w_name then
+      w_name = climate.override[p_name]
+   end
+   if particle_table[w_name] then
+      if particle_table[w_name].plist[p_name] then
+	 particle_table[w_name].plist[p_name] = nil
+      end
+      if not next(particle_table[w_name].plist) then
+	 -- no one else is using this particle, don't process it
+	 remove_from_idx(w_name)
+      end
+   end
+end
+
+local aw_timer = 0 -- timer for active weather, others are in particle_table
+minetest.register_globalstep(function(dtime)
+      -- do base weather
+      local aw = climate.active_weather
+      if aw.particle_interval then
+	 aw_timer = aw_timer + dtime
+	 if aw_timer > aw.particle_interval then
+	    --do active weather particles
+	    for _, player in pairs(minetest.get_connected_players()) do
+	       local nm = player:get_player_name()
+	       if not climate.override[nm] then
+		  aw.particle_function(player)
+	       end
+	    end
+	    aw_timer = 0
+	 end
+      end
+      -- do override weathers, if any
+      for i = 1, #particle_idx do
+	 local cw_nm = particle_idx[i]
+	 local wtable = particle_table[cw_nm]
+	 if next(wtable.plist) then -- plist is not empty
+	    wtable.timer = wtable.timer + dtime
+	    if wtable.timer > wtable.duration then
+	       for name, pobj in pairs(wtable.plist) do
+		  if pobj then
+		     particle_table[cw_nm].w_func(pobj)
+		  else
+		     wtable.plist[name] = nil
+		  end
+	       end
+	       wtable.timer = 0
+	    end
+	 end
+      end
+end)
