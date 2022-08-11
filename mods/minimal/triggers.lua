@@ -30,16 +30,19 @@ local function reset_player(player, pname, pos, nmeta, metastring)
    pmeta:set_string("energy", "1000")
    pmeta:set_string("hunger", "1000")
    pmeta:set_string("thirst", "100")
+   return true
 end
 
 local function hurt_player(player, pname, pos, nmeta, metastring)
    local damage = tonumber(metastring) or 2
    player:punch(player, 1.0, {full_punch_interval = 1.0,
 			   damage_groups = {fleshy=damage} }, nil)
+   return true
 end
 local function sethealth(player, pname, pos, nmeta, metastring)
    local val = tonumber(metastring) or 20
    player:set_hp(val)
+   return true
 end
 
 local function setenergy(player, pname, pos, nmeta, metastring)
@@ -47,18 +50,21 @@ local function setenergy(player, pname, pos, nmeta, metastring)
    if not val then return end
    local pmeta = player:get_meta()
    pmeta:set_string("energy", val * 10) -- energy is 1-1000, tenths of percent
+   return true
 end
 local function sethunger(player, pname, pos, nmeta, metastring)
    local val = tonumber(metastring)
    if not val then return end
    local pmeta = player:get_meta()
    pmeta:set_string("hunger", val * 10) -- 1-1000, same as energy
+   return true
 end
 local function setthirst(player, pname, pos, nmeta, metastring)
    local val = tonumber(metastring)
    if not val then return end
    local pmeta = player:get_meta()
    pmeta:set_string("thirst", val) -- thirst is 1-100
+   return true
 end
 
 local function teleport(player, pname, pos, nmeta, metastring)
@@ -193,13 +199,17 @@ function triggers.activate(pos, player, nodemeta)
    if not nodemeta then
       nodemeta = minetest.get_meta(pos)
    end
+   local updphys = false
    for nm, func in pairs(triggers.defs) do
       local val = nodemeta:get_string(nm)
       if val ~= "" then
-	 func(player, pname, pos, nodemeta, val)
+	 updphys = func(player, pname, pos, nodemeta, val)
       end
    end
    triggers.player[pname] = { [posstr] = time }
+   if updphys then
+      HEALTH.update_player_physics(player)
+   end
 end
 
 -- Formspec --------------------------------------------------------------
