@@ -238,6 +238,10 @@ minetest.register_node("tech:charcoal", {
 		minetest.set_node(pos, {name = "tech:small_charcoal_fire"})
 		minetest.check_for_falling(pos)
 	end,
+	on_rightclick = function (pos,node,clicker,itemstack,pointed_thing) 
+		minimal.slabs_combine(pos,node,itemstack,'tech:charcoal_block')
+	end,
+
 })
 
 
@@ -295,6 +299,9 @@ minetest.register_node('tech:small_wood_fire_unlit', {
 	paramtype = "light",
 	groups = {oddly_breakable_by_hand = 3, choppy = 3, falling_node = 1, flammable = 1},
 	sounds = nodes_nature.node_sound_wood_defaults(),
+	on_rightclick = function (pos,node,clicker,itemstack,pointed_thing) 
+		minimal.slabs_combine(pos,node,itemstack,'tech:large_wood_fire_unlit')
+	end,
 	on_burn = function(pos)
 		minetest.set_node(pos, {name = "tech:small_wood_fire"})
 		minetest.check_for_falling(pos)
@@ -732,7 +739,6 @@ local after_place_fire = function(pos, placer, itemstack, pointed_thing)
 	end
 end
 
-
 -- wood fires
 minetest.register_node('tech:small_wood_fire_ext', {
 	description = S('Small Wood Fire (extinguished)'),
@@ -748,7 +754,11 @@ minetest.register_node('tech:small_wood_fire_ext', {
 	sounds = nodes_nature.node_sound_dirt_defaults(),
 
 	on_dig = on_dig_fire,
+	on_rightclick = function (pos,node,clicker,itemstack,pointed_thing)
+		minimal.slabs_combine(pos,node,itemstack,'tech:large_wood_fire_ext')
+	end,
 	after_place_node = after_place_fire,
+
 	on_burn = function(pos)
 	   inferno.ignite(pos)
 	end,
@@ -785,7 +795,9 @@ minetest.register_node('tech:small_charcoal_fire_ext', {
 	groups = {crumbly = 3, oddly_breakable_by_hand = 1, falling_node = 1,
 		  temp_pass = 1, flammable = 3},
 	sounds = nodes_nature.node_sound_dirt_defaults(),
-
+	on_rightclick = function (pos,node,clicker,itemstack,pointed_thing) 
+		minimal.slabs_combine(pos,node,itemstack,'tech:large_charcoal_fire_ext')
+	end,
 	on_dig = on_dig_fire,
 	after_place_node = after_place_fire,
 	on_burn = function(pos)
